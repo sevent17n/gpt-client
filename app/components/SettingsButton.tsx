@@ -9,7 +9,7 @@ const SettingsButton:FC<ISettingsButton> = ({onClick,icon}) => {
     return (
         <button onClick={onClick} className={styles.settings}>
             <span>{icon}</span>
-            <p>{Locale.Settings.Title}рпорпопрорпопро</p>
+            <p>{Locale.Settings.Title}</p>
         </button>
     );
 };
