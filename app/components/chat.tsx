@@ -1,4 +1,4 @@
-import { useDebounce, useDebouncedCallback } from "use-debounce";
+import {  useDebouncedCallback } from "use-debounce";
 import { memo, useState, useRef, useEffect, useLayoutEffect } from "react";
 
 import SendWhiteIcon from "../icons/send-white.svg";
@@ -12,8 +12,7 @@ import LoadingIcon from "../icons/three-dots.svg";
 import BotIcon from "../icons/bot.svg";
 import AddIcon from "../icons/add.svg";
 import DeleteIcon from "../icons/delete.svg";
-import MaxIcon from "../icons/max.svg";
-import MinIcon from "../icons/min.svg";
+
 
 import LightIcon from "../icons/light.svg";
 import DarkIcon from "../icons/dark.svg";
@@ -27,7 +26,6 @@ import {
   BOT_HELLO,
   ROLES,
   createMessage,
-  useAccessStore,
   Theme,
 } from "../store";
 
@@ -545,16 +543,12 @@ export function Chat(props: {
 
   const context: RenderMessage[] = session.context.slice();
 
-  const accessStore = useAccessStore();
 
   if (
     context.length === 0 &&
     session.messages.at(0)?.content !== BOT_HELLO.content
   ) {
     const copiedHello = Object.assign({}, BOT_HELLO);
-    if (!accessStore.isAuthorized()) {
-      copiedHello.content = Locale.Error.Unauthorized;
-    }
     context.push(copiedHello);
   }
 
@@ -647,26 +641,7 @@ export function Chat(props: {
               }}
             />
           </div>
-          {!isMobileScreen() && (
-            <div className={styles["window-action-button"]}>
-              <IconButton
-                icon={chatStore.config.tightBorder ? <MinIcon /> : <MaxIcon />}
-                bordered
-                onClick={() => {
-                  chatStore.updateConfig(
-                    (config) => (config.tightBorder = !config.tightBorder),
-                  );
-                }}
-              />
-            </div>
-          )}
         </div>
-
-        <PromptToast
-          showToast={!hitBottom}
-          showModal={showPromptModal}
-          setShowModal={setShowPromptModal}
-        />
       </div>
 
       <div
@@ -693,11 +668,6 @@ export function Chat(props: {
                 <div className={styles["chat-message-avatar"]}>
                   <Avatar role={message.role} />
                 </div>
-                {(message.preview || message.streaming) && (
-                  <div className={styles["chat-message-status"]}>
-                    {Locale.Chat.Typing}
-                  </div>
-                )}
                 <div className={styles["chat-message-item"]}>
                   {!isUser &&
                     !(message.preview || message.content.length === 0) && (
@@ -757,16 +727,11 @@ export function Chat(props: {
       <div className={styles["chat-input-panel"]}>
         <PromptHints prompts={promptHints} onPromptSelect={onPromptSelect} />
 
-        <ChatActions
-          showPromptModal={() => setShowPromptModal(true)}
-          scrollToBottom={scrollToBottom}
-          hitBottom={hitBottom}
-        />
         <div className={styles["chat-input-panel-inner"]}>
           <textarea
             ref={inputRef}
             className={styles["chat-input"]}
-            placeholder={Locale.Chat.Input(submitKey)}
+            placeholder={!isMobileScreen() ? Locale.Chat.Input(submitKey) : ''}
             onInput={(e) => onInput(e.currentTarget.value)}
             value={userInput}
             onKeyDown={onInputKeyDown}

@@ -1,8 +1,12 @@
 @import "./window.scss";
 
 .settings {
-  padding: 20px;
+  padding: 58px 20px;
   overflow: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height:100%;
 }
 
 .settings-title {
@@ -30,5 +34,32 @@
 
   .password-input {
     min-width: 80%;
+  }
+}
+.gptModel{
+  align-self: flex-end;
+  color:var(--black);
+  span{
+    margin-right: 8px;
+  }
+}
+.Telegram{
+  width:64px;
+  height:64px;
+  align-self: flex-end;
+  background: white;
+  border: 1px solid var(--primary);
+  outline:none;
+  border-radius: 12px;
+
+  svg{
+    width:80%;
+    height: auto;
+    path:first-child{
+      fill:var(--icon);
+    }
+    path:last-child{
+      fill:var(--icon-bg);
+    }
   }
 }

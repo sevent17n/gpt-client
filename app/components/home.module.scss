@@ -1,6 +1,10 @@
 @import "./window.scss";
 @import "../styles/animation.scss";
 
+@font-face {
+  font-family: "LogoFont";
+  src: url("moonbasealpha.otf") ;
+}
 @mixin container {
   background-color: var(--white);
   border: var(--border-in-light);
@@ -11,7 +15,6 @@
   min-width: 600px;
   min-height: 480px;
   max-width: 1200px;
-
   display: flex;
   overflow: hidden;
   box-sizing: border-box;
@@ -113,24 +116,27 @@
 
 .sidebar-header {
   position: relative;
-  padding-top: 20px;
   padding-bottom: 20px;
 }
 
 .sidebar-logo {
   position: absolute;
   right: 0;
-  bottom: 18px;
+  bottom: 10px;
 }
 
 .sidebar-title {
-  font-size: 20px;
-  font-weight: bold;
+  margin-top:-10px;
+  text-align: center;
+  color:white;
+  line-height: 72px;
+  font-size: 72px;
+  font-family:"LogoFont";
 }
 
 .sidebar-sub-title {
   font-size: 12px;
-  font-weight: 400px;
+  font-weight: 400;
 }
 
 .sidebar-body {
@@ -142,8 +148,9 @@
 }
 
 .chat-item {
+  color:white;
   padding: 10px 14px;
-  background-color: var(--white);
+  background-color:rgb(21, 21, 21);
   border-radius: 10px;
   margin-bottom: 10px;
   box-shadow: var(--card-shadow);
@@ -157,6 +164,7 @@
 
 .chat-item:hover {
   background-color: var(--hover-color);
+  color:var(--black);
 }
 
 .chat-item-selected {
@@ -207,17 +215,18 @@
 }
 
 .sidebar-tail {
-  display: flex;
-  justify-content: space-between;
+  width:100%;
   padding-top: 20px;
+
 }
 
 .sidebar-actions {
-  display: inline-flex;
-}
+  width:100%;
+  button{
+    margin-top: 24px;
+    width:100%;
+  }
 
-.sidebar-action:not(:last-child) {
-  margin-right: 15px;
 }
 
 .chat {
@@ -339,7 +348,7 @@
 }
 
 .chat-message-user > .chat-message-container > .chat-message-item {
-  background-color: var(--second);
+  background-color: var(--gray);
 }
 
 .chat-message-actions {
@@ -446,11 +455,11 @@
 
 .chat-input-send {
   background-color: var(--primary);
-  color: white;
-
+  color: var(--primary);
+  border:1px solid var(--primary);
   position: absolute;
   right: 30px;
-  bottom: 32px;
+  bottom: 45px;
 }
 
 @media only screen and (max-width: 600px) {

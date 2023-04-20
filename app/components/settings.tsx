@@ -1,6 +1,6 @@
-import { useState, useEffect, useMemo, HTMLProps } from "react";
+import {useState, useEffect, useMemo, HTMLProps} from "react";
 
-import EmojiPicker, { Theme as EmojiTheme } from "emoji-picker-react";
+import EmojiPicker, {Theme as EmojiTheme} from "emoji-picker-react";
 
 import styles from "./settings.module.scss";
 
@@ -11,551 +11,263 @@ import EditIcon from "../icons/edit.svg";
 import EyeIcon from "../icons/eye.svg";
 import EyeOffIcon from "../icons/eye-off.svg";
 
-import { List, ListItem, Popover, showToast } from "./ui-lib";
+import {List, ListItem, Popover, showToast} from "./ui-lib";
 
-import { IconButton } from "./button";
+import {IconButton} from "./button";
 import {
-  SubmitKey,
-  useChatStore,
-  Theme,
-  ALL_MODELS,
-  useUpdateStore,
-  useAccessStore,
-  ModalConfigValidator,
+    SubmitKey,
+    useChatStore,
+    Theme,
+    ALL_MODELS,
+    ModalConfigValidator,
 } from "../store";
-import { Avatar } from "./chat";
+import {Avatar} from "./chat";
 
-import Locale, { AllLangs, changeLang, getLang } from "../locales";
-import { getEmojiUrl } from "../utils";
-import Link from "next/link";
-import { UPDATE_URL } from "../constant";
-import { SearchService, usePromptStore } from "../store/prompt";
-import { requestUsage } from "../requests";
-import { ErrorBoundary } from "./error";
-import { InputRange } from "./input-range";
+import Locale, {AllLangs, changeLang, getLang} from "../locales";
+import {getEmojiUrl} from "../utils";
+import {SearchService, usePromptStore} from "../store/prompt";
+import {requestUsage} from "../requests";
+import {ErrorBoundary} from "./error";
+import {InputRange} from "./input-range";
 
 function SettingItem(props: {
-  title: string;
-  subTitle?: string;
-  children: JSX.Element;
+    title: string;
+    subTitle?: string;
+    children: JSX.Element;
 }) {
-  return (
-    <ListItem>
-      <div className={styles["settings-title"]}>
-        <div>{props.title}</div>
-        {props.subTitle && (
-          <div className={styles["settings-sub-title"]}>{props.subTitle}</div>
-        )}
-      </div>
-      {props.children}
-    </ListItem>
-  );
+    return (
+        <ListItem>
+            <div className={styles["settings-title"]}>
+                <div>{props.title}</div>
+                {props.subTitle && (
+                    <div className={styles["settings-sub-title"]}>{props.subTitle}</div>
+                )}
+            </div>
+            {props.children}
+        </ListItem>
+    );
 }
 
 function PasswordInput(props: HTMLProps<HTMLInputElement>) {
-  const [visible, setVisible] = useState(false);
+    const [visible, setVisible] = useState(false);
 
-  function changeVisibility() {
-    setVisible(!visible);
-  }
+    function changeVisibility() {
+        setVisible(!visible);
+    }
 
-  return (
-    <div className={styles["password-input-container"]}>
-      <IconButton
-        icon={visible ? <EyeIcon /> : <EyeOffIcon />}
-        onClick={changeVisibility}
-        className={styles["password-eye"]}
-      />
-      <input
-        {...props}
-        type={visible ? "text" : "password"}
-        className={styles["password-input"]}
-      />
-    </div>
-  );
+    return (
+        <div className={styles["password-input-container"]}>
+            <IconButton
+                icon={visible ? <EyeIcon/> : <EyeOffIcon/>}
+                onClick={changeVisibility}
+                className={styles["password-eye"]}
+            />
+            <input
+                {...props}
+                type={visible ? "text" : "password"}
+                className={styles["password-input"]}
+            />
+        </div>
+    );
+}
+
+const TelegramButton = () => {
+    return (
+        <button className={styles.Telegram}><a href={'https://t.me/Djipiti'} target={'_blank'}>
+            <span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" >
+                <path
+                      d="M17.688 21.744a2.02 2.02 0 0 1-1.242-.427l-4.03-3.122l-2.702 2.983a1 1 0 0 1-1.698-.383l-2.02-6.682l-3.626-1.26a2.042 2.042 0 0 1-.103-3.818L20.187 1.8a2.042 2.042 0 0 1 2.771 2.295L19.695 20.11a2.054 2.054 0 0 1-2.008 1.633Z"
+                      opacity="0.9"/>
+                <path
+
+                      d="M8.973 21.506a1 1 0 0 1-.957-.71l-2.168-7.16a.999.999 0 0 1 .495-1.176L16.91 6.958a1 1 0 0 1 1.17 1.594l-7.084 7.083l-1.044 5.072a1 1 0 0 1-.933.798h-.046Z"  />
+            </svg></span>
+        </a></button>
+    )
 }
 
 export function Settings(props: { closeSettings: () => void }) {
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const [config, updateConfig, resetConfig, clearAllData, clearSessions] =
-    useChatStore((state) => [
-      state.config,
-      state.updateConfig,
-      state.resetConfig,
-      state.clearAllData,
-      state.clearSessions,
-    ]);
+    const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+    const [config, updateConfig, resetConfig, clearAllData, clearSessions] =
+        useChatStore((state) => [
+            state.config,
+            state.updateConfig,
+            state.resetConfig,
+            state.clearAllData,
+            state.clearSessions,
+        ]);
 
-  const updateStore = useUpdateStore();
-  const [checkingUpdate, setCheckingUpdate] = useState(false);
-  const currentVersion = updateStore.version;
-  const remoteId = updateStore.remoteVersion;
-  const hasNewVersion = currentVersion !== remoteId;
 
-  function checkUpdate(force = false) {
-    setCheckingUpdate(true);
-    updateStore.getLatestVersion(force).then(() => {
-      setCheckingUpdate(false);
-    });
-  }
+    const [usage, setUsage] = useState<{
+        used?: number;
+        subscription?: number;
+    }>();
+    const [loadingUsage, setLoadingUsage] = useState(false);
 
-  const [usage, setUsage] = useState<{
-    used?: number;
-    subscription?: number;
-  }>();
-  const [loadingUsage, setLoadingUsage] = useState(false);
-  function checkUsage() {
-    setLoadingUsage(true);
-    requestUsage()
-      .then((res) => setUsage(res))
-      .finally(() => {
-        setLoadingUsage(false);
-      });
-  }
+    function checkUsage() {
+        setLoadingUsage(true);
+        requestUsage()
+            .then((res) => setUsage(res))
+            .finally(() => {
+                setLoadingUsage(false);
+            });
+    }
 
-  const accessStore = useAccessStore();
-  const enabledAccessControl = useMemo(
-    () => accessStore.enabledAccessControl(),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
-  );
 
-  const promptStore = usePromptStore();
-  const builtinCount = SearchService.count.builtin;
-  const customCount = promptStore.prompts.size ?? 0;
+    const promptStore = usePromptStore();
+    const builtinCount = SearchService.count.builtin;
+    const customCount = promptStore.prompts.size ?? 0;
 
-  const showUsage = accessStore.isAuthorized();
-  useEffect(() => {
-    checkUpdate();
-    showUsage && checkUsage();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    const keydownEvent = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        props.closeSettings();
-      }
-    };
-    document.addEventListener("keydown", keydownEvent);
-    return () => {
-      document.removeEventListener("keydown", keydownEvent);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  return (
-    <ErrorBoundary>
-      <div className={styles["window-header"]}>
-        <div className={styles["window-header-title"]}>
-          <div className={styles["window-header-main-title"]}>
-            {Locale.Settings.Title}
-          </div>
-          <div className={styles["window-header-sub-title"]}>
-            {Locale.Settings.SubTitle}
-          </div>
-        </div>
-        <div className={styles["window-actions"]}>
-          <div className={styles["window-action-button"]}>
-            <IconButton
-              icon={<ClearIcon />}
-              onClick={() => {
-                const confirmed = window.confirm(
-                  `${Locale.Settings.Actions.ConfirmClearAll.Confirm}`,
-                );
-                if (confirmed) {
-                  clearSessions();
-                }
-              }}
-              bordered
-              title={Locale.Settings.Actions.ClearAll}
-            />
-          </div>
-          <div className={styles["window-action-button"]}>
-            <IconButton
-              icon={<ResetIcon />}
-              onClick={() => {
-                const confirmed = window.confirm(
-                  `${Locale.Settings.Actions.ConfirmResetAll.Confirm}`,
-                );
-                if (confirmed) {
-                  resetConfig();
-                }
-              }}
-              bordered
-              title={Locale.Settings.Actions.ResetAll}
-            />
-          </div>
-          <div className={styles["window-action-button"]}>
-            <IconButton
-              icon={<CloseIcon />}
-              onClick={props.closeSettings}
-              bordered
-              title={Locale.Settings.Actions.Close}
-            />
-          </div>
-        </div>
-      </div>
-      <div className={styles["settings"]}>
-        <List>
-          <SettingItem title={Locale.Settings.Avatar}>
-            <Popover
-              onClose={() => setShowEmojiPicker(false)}
-              content={
-                <EmojiPicker
-                  lazyLoadEmojis
-                  theme={EmojiTheme.AUTO}
-                  getEmojiUrl={getEmojiUrl}
-                  onEmojiClick={(e) => {
-                    updateConfig((config) => (config.avatar = e.unified));
-                    setShowEmojiPicker(false);
-                  }}
-                />
-              }
-              open={showEmojiPicker}
-            >
-              <div
-                className={styles.avatar}
-                onClick={() => setShowEmojiPicker(true)}
-              >
-                <Avatar role="user" />
-              </div>
-            </Popover>
-          </SettingItem>
-
-          <SettingItem
-            title={Locale.Settings.Update.Version(currentVersion ?? "unknown")}
-            subTitle={
-              checkingUpdate
-                ? Locale.Settings.Update.IsChecking
-                : hasNewVersion
-                ? Locale.Settings.Update.FoundUpdate(remoteId ?? "ERROR")
-                : Locale.Settings.Update.IsLatest
+    useEffect(() => {
+        const keydownEvent = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                props.closeSettings();
             }
-          >
-            {checkingUpdate ? (
-              <div />
-            ) : hasNewVersion ? (
-              <Link href={UPDATE_URL} target="_blank" className="link">
-                {Locale.Settings.Update.GoToUpdate}
-              </Link>
-            ) : (
-              <IconButton
-                icon={<ResetIcon></ResetIcon>}
-                text={Locale.Settings.Update.CheckUpdate}
-                onClick={() => checkUpdate(true)}
-              />
-            )}
-          </SettingItem>
+        };
+        document.addEventListener("keydown", keydownEvent);
+        return () => {
+            document.removeEventListener("keydown", keydownEvent);
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
-          <SettingItem title={Locale.Settings.SendKey}>
-            <select
-              value={config.submitKey}
-              onChange={(e) => {
-                updateConfig(
-                  (config) =>
-                    (config.submitKey = e.target.value as any as SubmitKey),
-                );
-              }}
-            >
-              {Object.values(SubmitKey).map((v) => (
-                <option value={v} key={v}>
-                  {v}
-                </option>
-              ))}
-            </select>
-          </SettingItem>
 
-          <ListItem>
-            <div className={styles["settings-title"]}>
-              {Locale.Settings.Theme}
+    return (
+        <ErrorBoundary>
+            <div className={styles["window-header"]}>
+                <div className={styles["window-header-title"]}>
+                    <div className={styles["window-header-main-title"]}>
+                        {Locale.Settings.Title}
+                    </div>
+                </div>
+                <div className={styles["window-actions"]}>
+                    <div className={styles["window-action-button"]}>
+                        <IconButton
+                            icon={<ClearIcon/>}
+                            onClick={() => {
+                                const confirmed = window.confirm(
+                                    `${Locale.Settings.Actions.ConfirmClearAll.Confirm}`,
+                                );
+                                if (confirmed) {
+                                    clearSessions();
+                                }
+                            }}
+                            bordered
+                            title={Locale.Settings.Actions.ClearAll}
+                        />
+                    </div>
+                    <div className={styles["window-action-button"]}>
+                        <IconButton
+                            icon={<ResetIcon/>}
+                            onClick={() => {
+                                const confirmed = window.confirm(
+                                    `${Locale.Settings.Actions.ConfirmResetAll.Confirm}`,
+                                );
+                                if (confirmed) {
+                                    resetConfig();
+                                }
+                            }}
+                            bordered
+                            title={Locale.Settings.Actions.ResetAll}
+                        />
+                    </div>
+                    <div className={styles["window-action-button"]}>
+                        <IconButton
+                            icon={<CloseIcon/>}
+                            onClick={props.closeSettings}
+                            bordered
+                            title={Locale.Settings.Actions.Close}
+                        />
+                    </div>
+                </div>
             </div>
-            <select
-              value={config.theme}
-              onChange={(e) => {
-                updateConfig(
-                  (config) => (config.theme = e.target.value as any as Theme),
-                );
-              }}
-            >
-              {Object.values(Theme).map((v) => (
-                <option value={v} key={v}>
-                  {v}
-                </option>
-              ))}
-            </select>
-          </ListItem>
+            <div className={styles["settings"]}>
+                <List>
+                    <SettingItem title={Locale.Settings.Avatar}>
+                        <Popover
+                            onClose={() => setShowEmojiPicker(false)}
+                            content={
+                                <EmojiPicker
+                                    lazyLoadEmojis
+                                    theme={EmojiTheme.AUTO}
+                                    getEmojiUrl={getEmojiUrl}
+                                    onEmojiClick={(e) => {
+                                        updateConfig((config) => (config.avatar = e.unified));
+                                        setShowEmojiPicker(false);
+                                    }}
+                                />
+                            }
+                            open={showEmojiPicker}
+                        >
+                            <div
+                                className={styles.avatar}
+                                onClick={() => setShowEmojiPicker(true)}
+                            >
+                                <Avatar role="user"/>
+                            </div>
+                        </Popover>
+                    </SettingItem>
 
-          <SettingItem title={Locale.Settings.Lang.Name}>
-            <select
-              value={getLang()}
-              onChange={(e) => {
-                changeLang(e.target.value as any);
-              }}
-            >
-              {AllLangs.map((lang) => (
-                <option value={lang} key={lang}>
-                  {Locale.Settings.Lang.Options[lang]}
-                </option>
-              ))}
-            </select>
-          </SettingItem>
 
-          <SettingItem
-            title={Locale.Settings.FontSize.Title}
-            subTitle={Locale.Settings.FontSize.SubTitle}
-          >
-            <InputRange
-              title={`${config.fontSize ?? 14}px`}
-              value={config.fontSize}
-              min="12"
-              max="18"
-              step="1"
-              onChange={(e) =>
-                updateConfig(
-                  (config) =>
-                    (config.fontSize = Number.parseInt(e.currentTarget.value)),
-                )
-              }
-            ></InputRange>
-          </SettingItem>
+                    <ListItem>
+                        <div className={styles["settings-title"]}>
+                            {Locale.Settings.Theme}
+                        </div>
+                        <select
+                            value={config.theme}
+                            onChange={(e) => {
+                                updateConfig(
+                                    (config) => (config.theme = e.target.value as any as Theme),
+                                );
+                            }}
+                        >
+                            {Object.values(Theme).map((v) => (
+                                <option value={v} key={v}>
+                                    {v}
+                                </option>
+                            ))}
+                        </select>
+                    </ListItem>
 
-          <SettingItem title={Locale.Settings.TightBorder}>
-            <input
-              type="checkbox"
-              checked={config.tightBorder}
-              onChange={(e) =>
-                updateConfig(
-                  (config) => (config.tightBorder = e.currentTarget.checked),
-                )
-              }
-            ></input>
-          </SettingItem>
+                    <SettingItem title={Locale.Settings.Lang.Name}>
+                        <select
+                            value={getLang()}
+                            onChange={(e) => {
+                                changeLang(e.target.value as any);
+                            }}
+                        >
+                            {AllLangs.map((lang) =>
+                                (
+                                    <option value={lang} key={lang}>
+                                        {
+                                            // @ts-ignore
+                                            Locale.Settings.Lang.Options[lang]
+                                        }
+                                    </option>
+                                ))}
+                        </select>
+                    </SettingItem>
 
-          <SettingItem title={Locale.Settings.SendPreviewBubble}>
-            <input
-              type="checkbox"
-              checked={config.sendPreviewBubble}
-              onChange={(e) =>
-                updateConfig(
-                  (config) =>
-                    (config.sendPreviewBubble = e.currentTarget.checked),
-                )
-              }
-            ></input>
-          </SettingItem>
-        </List>
-
-        <List>
-          {enabledAccessControl ? (
-            <SettingItem
-              title={Locale.Settings.AccessCode.Title}
-              subTitle={Locale.Settings.AccessCode.SubTitle}
-            >
-              <PasswordInput
-                value={accessStore.accessCode}
-                type="text"
-                placeholder={Locale.Settings.AccessCode.Placeholder}
-                onChange={(e) => {
-                  accessStore.updateCode(e.currentTarget.value);
-                }}
-              />
-            </SettingItem>
-          ) : (
-            <></>
-          )}
-
-          <SettingItem
-            title={Locale.Settings.Token.Title}
-            subTitle={Locale.Settings.Token.SubTitle}
-          >
-            <PasswordInput
-              value={accessStore.token}
-              type="text"
-              placeholder={Locale.Settings.Token.Placeholder}
-              onChange={(e) => {
-                accessStore.updateToken(e.currentTarget.value);
-              }}
-            />
-          </SettingItem>
-
-          <SettingItem
-            title={Locale.Settings.Usage.Title}
-            subTitle={
-              showUsage
-                ? loadingUsage
-                  ? Locale.Settings.Usage.IsChecking
-                  : Locale.Settings.Usage.SubTitle(
-                      usage?.used ?? "[?]",
-                      usage?.subscription ?? "[?]",
-                    )
-                : Locale.Settings.Usage.NoAccess
-            }
-          >
-            {!showUsage || loadingUsage ? (
-              <div />
-            ) : (
-              <IconButton
-                icon={<ResetIcon></ResetIcon>}
-                text={Locale.Settings.Usage.Check}
-                onClick={checkUsage}
-              />
-            )}
-          </SettingItem>
-
-          <SettingItem
-            title={Locale.Settings.HistoryCount.Title}
-            subTitle={Locale.Settings.HistoryCount.SubTitle}
-          >
-            <InputRange
-              title={config.historyMessageCount.toString()}
-              value={config.historyMessageCount}
-              min="0"
-              max="25"
-              step="1"
-              onChange={(e) =>
-                updateConfig(
-                  (config) =>
-                    (config.historyMessageCount = e.target.valueAsNumber),
-                )
-              }
-            ></InputRange>
-          </SettingItem>
-
-          <SettingItem
-            title={Locale.Settings.CompressThreshold.Title}
-            subTitle={Locale.Settings.CompressThreshold.SubTitle}
-          >
-            <input
-              type="number"
-              min={500}
-              max={4000}
-              value={config.compressMessageLengthThreshold}
-              onChange={(e) =>
-                updateConfig(
-                  (config) =>
-                    (config.compressMessageLengthThreshold =
-                      e.currentTarget.valueAsNumber),
-                )
-              }
-            ></input>
-          </SettingItem>
-        </List>
-
-        <List>
-          <SettingItem
-            title={Locale.Settings.Prompt.Disable.Title}
-            subTitle={Locale.Settings.Prompt.Disable.SubTitle}
-          >
-            <input
-              type="checkbox"
-              checked={config.disablePromptHint}
-              onChange={(e) =>
-                updateConfig(
-                  (config) =>
-                    (config.disablePromptHint = e.currentTarget.checked),
-                )
-              }
-            ></input>
-          </SettingItem>
-
-          <SettingItem
-            title={Locale.Settings.Prompt.List}
-            subTitle={Locale.Settings.Prompt.ListCount(
-              builtinCount,
-              customCount,
-            )}
-          >
-            <IconButton
-              icon={<EditIcon />}
-              text={Locale.Settings.Prompt.Edit}
-              onClick={() => showToast(Locale.WIP)}
-            />
-          </SettingItem>
-        </List>
-
-        <List>
-          <SettingItem title={Locale.Settings.Model}>
-            <select
-              value={config.modelConfig.model}
-              onChange={(e) => {
-                updateConfig(
-                  (config) =>
-                    (config.modelConfig.model = ModalConfigValidator.model(
-                      e.currentTarget.value,
-                    )),
-                );
-              }}
-            >
-              {ALL_MODELS.map((v) => (
-                <option value={v.name} key={v.name} disabled={!v.available}>
-                  {v.name}
-                </option>
-              ))}
-            </select>
-          </SettingItem>
-          <SettingItem
-            title={Locale.Settings.Temperature.Title}
-            subTitle={Locale.Settings.Temperature.SubTitle}
-          >
-            <InputRange
-              value={config.modelConfig.temperature?.toFixed(1)}
-              min="0"
-              max="2"
-              step="0.1"
-              onChange={(e) => {
-                updateConfig(
-                  (config) =>
-                    (config.modelConfig.temperature =
-                      ModalConfigValidator.temperature(
-                        e.currentTarget.valueAsNumber,
-                      )),
-                );
-              }}
-            ></InputRange>
-          </SettingItem>
-          <SettingItem
-            title={Locale.Settings.MaxTokens.Title}
-            subTitle={Locale.Settings.MaxTokens.SubTitle}
-          >
-            <input
-              type="number"
-              min={100}
-              max={32000}
-              value={config.modelConfig.max_tokens}
-              onChange={(e) =>
-                updateConfig(
-                  (config) =>
-                    (config.modelConfig.max_tokens =
-                      ModalConfigValidator.max_tokens(
-                        e.currentTarget.valueAsNumber,
-                      )),
-                )
-              }
-            ></input>
-          </SettingItem>
-          <SettingItem
-            title={Locale.Settings.PresencePenlty.Title}
-            subTitle={Locale.Settings.PresencePenlty.SubTitle}
-          >
-            <InputRange
-              value={config.modelConfig.presence_penalty?.toFixed(1)}
-              min="-2"
-              max="2"
-              step="0.5"
-              onChange={(e) => {
-                updateConfig(
-                  (config) =>
-                    (config.modelConfig.presence_penalty =
-                      ModalConfigValidator.presence_penalty(
-                        e.currentTarget.valueAsNumber,
-                      )),
-                );
-              }}
-            ></InputRange>
-          </SettingItem>
-        </List>
-      </div>
-    </ErrorBoundary>
-  );
+                    <SettingItem
+                        title={Locale.Settings.FontSize.Title}
+                    >
+                        <InputRange
+                            title={`${config.fontSize ?? 14}px`}
+                            value={config.fontSize}
+                            min="12"
+                            max="18"
+                            step="1"
+                            onChange={(e) =>
+                                updateConfig(
+                                    (config) =>
+                                        (config.fontSize = Number.parseInt(e.currentTarget.value)),
+                                )
+                            }
+                        ></InputRange>
+                    </SettingItem>
+                </List>
+                <TelegramButton/>
+            </div>
+        </ErrorBoundary>
+    );
 }

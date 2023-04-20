@@ -27,7 +27,7 @@ export function IconButton(props: {
       role="button"
     >
       <div
-        className={styles["icon-button-icon"] + ` ${props.noDark && "no-dark"}`}
+        className={styles["icon-button-icon"] }
       >
         {props.icon}
       </div>
