@@ -38,9 +38,9 @@ export enum SubmitKey {
 }
 
 export enum Theme {
-  Auto = "auto",
-  Dark = "dark",
-  Light = "light",
+  Auto = "Auto",
+  Dark = "Dark",
+  Light = "Light",
 }
 
 export interface ChatConfig {
@@ -140,7 +140,7 @@ const DEFAULT_CONFIG: ChatConfig = {
   avatar: "1f603",
   fontSize: 14,
   theme: Theme.Auto as Theme,
-  tightBorder: false,
+  tightBorder: true,
   sendPreviewBubble: true,
   sidebarWidth: 300,
 
