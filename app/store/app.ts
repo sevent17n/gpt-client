@@ -30,8 +30,8 @@ export function createMessage(override: Partial<Message>): Message {
 }
 
 export enum SubmitKey {
-  Enter = "Ctrl + Enter",
-  CtrlEnter = "Enter",
+  Enter = "Enter",
+  CtrlEnter = "Ctrl + Enter",
   ShiftEnter = "Shift + Enter",
   AltEnter = "Alt + Enter",
   MetaEnter = "Meta + Enter",
