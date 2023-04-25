@@ -49,9 +49,8 @@ export default function Auth() {
             <LoginButton
               botUsername={"Djipiti_test_bot"}
               buttonSize="large" // "large" | "medium" | "small"
-              cornerRadius={5} // 0 - 20
+              cornerRadius={20} // 0 - 20
               showAvatar={true} // true | false
-              lang="en"
               onAuthCallback={(data) => {
                 alert(data);
                 // call your backend here to validate the data and sign in the user
