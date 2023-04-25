@@ -47,7 +47,7 @@ export default function Auth() {
               <input type="submit" />
             </form>
             <LoginButton
-              botUsername={process.env.BOT_USERNAME || ''}
+              botUsername={"Djipiti_test_bot"}
               buttonSize="large" // "large" | "medium" | "small"
               cornerRadius={5} // 0 - 20
               showAvatar={true} // true | false
