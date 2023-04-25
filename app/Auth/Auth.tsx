@@ -53,7 +53,7 @@ export default function Auth() {
               showAvatar={true} // true | false
               lang="en"
               onAuthCallback={(data) => {
-                console.log(data);
+                alert(data);
                 // call your backend here to validate the data and sign in the user
               }}
             />
