@@ -5,7 +5,7 @@ import NewChat from "@/app/components/NewChat";
 require("../polyfill");
 
 import { useState, useEffect, useRef } from "react";
-
+import { LoginButton } from '@telegram-auth/react';
 import { IconButton } from "./button";
 import styles from "./home.module.scss";
 
@@ -221,11 +221,9 @@ function _Home() {
           onMouseDown={(e) => onDragMouseDown(e as any)}
         ></div>
       </div>
-
       <div className={styles["window-content"]}>
         {openSettings ? (
           <Settings
-
             closeSettings={() => {
               setOpenSettings(false);
               setShowSideBar(true);

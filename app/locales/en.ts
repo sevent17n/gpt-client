@@ -10,6 +10,13 @@ const en: LocaleType = {
   ChatItem: {
     ChatItemCount: (count: number) => `${count} messages`,
   },
+  Auth:{
+    AuthTitle:'To start you have to register or login!',
+    AuthName:'Enter your name',
+    AuthEmail:'Enter your email',
+    AuthPassword:'Enter your password',
+    AuthTelegram:'Login Telega'
+  },
   Chat: {
     SubTitle: (count: number) => `${count} messages with ChatGPT`,
     Actions: {

@@ -1,16 +1,17 @@
 import { Analytics } from "@vercel/analytics/react";
+import { Home } from "@/app/components/home";
+import { getServerSideConfig } from "@/app/config/server";
+import Auth from "@/app/Auth/Auth";
 
-import { Home } from "./components/home";
 
-import { getServerSideConfig } from "./config/server";
 
 const serverConfig = getServerSideConfig();
 
-export default async function App() {
+export default async function Page() {
   return (
     <>
+      <Auth/>
       <Home />
-      {serverConfig?.isVercel && <Analytics />}
     </>
   );
 }
