@@ -47,11 +47,15 @@ export default function Auth() {
               <input type="submit" />
             </form>
             <LoginButton
-              botUsername={"Djipiti_test_bot"}
+              botUsername={"https://t.me/Djipiti_test_bot"}
               buttonSize="large" // "large" | "medium" | "small"
               cornerRadius={5} // 0 - 20
               showAvatar={true} // true | false
-              lang="ru"
+              lang="en"
+              onAuthCallback={(data) => {
+                console.log(data);
+                // call your backend here to validate the data and sign in the user
+              }}
             />
             <p onClick={()=>setIsAuth(true)}>Already has an account? Login</p>
           </>
