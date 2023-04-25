@@ -10,7 +10,7 @@ const serverConfig = getServerSideConfig();
 export default async function Page() {
   return (
     <>
-      <Auth/>
+      {/*<Auth/>*/}
       <Home />
     </>
   );
