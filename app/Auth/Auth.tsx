@@ -87,23 +87,24 @@ export default function Auth() {
                 cornerRadius={20} // 0 - 20
                 showAvatar={true} // true | false
                 onAuthCallback={async (data) => {
-                  console.log(data)
-                  // try {
-                  //   const response = await axios.post(
-                  //     `http://localhost:5000/api/auth/register/telegram`,
-                  //     {
-                  //      telegramID:data.id,
-                  //      photoURL:data.photo_url,
-                  //      firstName:data.first_name
-                  //     }
-                  //   )
-                  //   if (response.data.accessToken) {
-                  //     saveToStorage(response.data)
-                  //   }
-                  //   return response
-                  // }catch (e) {
-                  //   console.log(e)
-                  // }
+                  try {
+                    const response = await axios.post(
+                      `http://localhost:5000/api/auth/register/telegram`,
+                      {
+                       telegramID:data.id,
+                       photoURL:data.photo_url,
+                       firstName:data.first_name
+                      }
+                    )
+                    if (response.data.accessToken) {
+                      saveToStorage(response.data)
+                    }
+                    console.log(data.id)
+                    console.log(response)
+                    return response
+                  }catch (e) {
+                    console.log(e)
+                  }
                 }}
               />
               <p onClick={()=>setIsLogin(true)}>Already has an account? Login</p>
