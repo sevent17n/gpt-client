@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-
 import { type ChatCompletionResponseMessage } from "openai";
 import {
   ControllerPool,
@@ -11,6 +10,7 @@ import { isMobileScreen, trimTopic } from "../utils";
 
 import Locale from "../locales";
 import { showToast } from "../components/ui-lib";
+import { userStore } from "./user";
 
 export type Message = ChatCompletionResponseMessage & {
   date: string;
@@ -18,6 +18,7 @@ export type Message = ChatCompletionResponseMessage & {
   isError?: boolean;
   id?: number;
 };
+
 
 export function createMessage(override: Partial<Message>): Message {
   return {
@@ -243,7 +244,6 @@ export const useChatStore = create<ChatStore>()(
       config: {
         ...DEFAULT_CONFIG,
       },
-
       clearSessions() {
         set(() => ({
           sessions: [createEmptySession()],
@@ -399,7 +399,6 @@ export const useChatStore = create<ChatStore>()(
           session.messages.push(userMessage);
           session.messages.push(botMessage);
         });
-
         // make request
         console.log("[User Input] ", sendMessages);
         requestChatStream(sendMessages, {
