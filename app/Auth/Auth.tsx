@@ -3,9 +3,10 @@ import styles from "./Auth.module.scss";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { LoginButton } from "@telegram-auth/react";
-import { userStore } from "@/app/store/user";
+import { saveToStorage, userStore } from "@/app/store/user";
 import Cookies from "js-cookie";
 import {useEffect} from "react"
+import axios from "axios";
 
 
 export default function Auth() {
@@ -85,9 +86,24 @@ export default function Auth() {
                 buttonSize="large" // "large" | "medium" | "small"
                 cornerRadius={20} // 0 - 20
                 showAvatar={true} // true | false
-                onAuthCallback={(data) => {
-                  console.log(data);
-                  // call your backend here to validate the data and sign in the user
+                onAuthCallback={async (data) => {
+                  console.log(data)
+                  // try {
+                  //   const response = await axios.post(
+                  //     `http://localhost:5000/api/auth/register/telegram`,
+                  //     {
+                  //      telegramID:data.id,
+                  //      photoURL:data.photo_url,
+                  //      firstName:data.first_name
+                  //     }
+                  //   )
+                  //   if (response.data.accessToken) {
+                  //     saveToStorage(response.data)
+                  //   }
+                  //   return response
+                  // }catch (e) {
+                  //   console.log(e)
+                  // }
                 }}
               />
               <p onClick={()=>setIsLogin(true)}>Already has an account? Login</p>
