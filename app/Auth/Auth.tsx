@@ -9,28 +9,31 @@ import {useEffect} from "react"
 
 
 export default function Auth() {
-  const { Logout, CheckAuth } = userStore() as any
-  useEffect(() => {
-    const accessToken = Cookies.get("accessToken")
-    if (accessToken) CheckAuth()
-
-  }, [])
-
-  useEffect(() => {
-    const refreshToken = Cookies.get("refreshToken")
-    if (!refreshToken) Logout()
-  }, [])
-
-  const [isLogin, setIsLogin] = useState(true);
   const {Register,Error, Login} = userStore() as any
   const {
     register,
     handleSubmit,
     formState: { errors }
   } = useForm();
+  const [user,setUser]= useState<string | null>(' ')
+  const { Logout, CheckAuth } = userStore() as any
+  useEffect(() => {
+     CheckAuth()
+  }, [])
+
+  useEffect(() => {
+    const refreshToken = Cookies.get("refreshToken")
+    if (!refreshToken) Logout()
+  }, [])
+  useEffect(()=> {
+    setUser(localStorage.getItem("user"))
+  },[localStorage.getItem("user")])
+  const [isLogin, setIsLogin] = useState(true);
+
+
   return (
     <>
-      {!localStorage.getItem("user") &&  <div className={styles.container}>
+      {!user &&  <div className={styles.container}>
         <div>
           {isLogin ?
             <>

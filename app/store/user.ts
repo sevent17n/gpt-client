@@ -59,7 +59,6 @@ export const errorCatch = (error: any): string => {
 
 export const userStore = create(
   set => ({
-    needAuth:true,
     Error:null,
     Login:async (emailOrLogin: string, password: string) => {
       try{
