@@ -75,7 +75,7 @@ const TelegramButton = () => {
     return (
         <div className={styles.Telegram}>
             <div>
-                <h3>Контакты:</h3>
+                 <h3>Контакты:</h3>
                 <a href="tel:+79117444280">+7 (911) 744 42-80</a>
                 <a href="mailto:djipiti.contact@gmail.com">djipiti.contact@gmail.com</a>
             </div>
