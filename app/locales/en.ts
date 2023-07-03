@@ -1,4 +1,4 @@
-import { SubmitKey } from "../store/app";
+import { SubmitKey } from "@/app/store";
 import type { LocaleType } from "./index";
 
 const en: LocaleType = {
@@ -9,13 +9,6 @@ const en: LocaleType = {
   },
   ChatItem: {
     ChatItemCount: (count: number) => `${count} messages`,
-  },
-  Auth:{
-    AuthTitle:'To start you have to register or login!',
-    AuthName:'Enter your name',
-    AuthEmail:'Enter your email',
-    AuthPassword:'Enter your password',
-    AuthTelegram:'Login Telega'
   },
   Chat: {
     SubTitle: (count: number) => `${count} messages with ChatGPT`,
@@ -84,6 +77,7 @@ const en: LocaleType = {
         it: "Italiano",
         tr: "Türkçe",
         jp: "日本語",
+        ru:"Русский"
       },
     },
     Avatar: "Avatar",
@@ -159,6 +153,8 @@ const en: LocaleType = {
   Store: {
     DefaultTopic: "New Conversation",
     BotHello: "Hello! How can I assist you today?",
+    Authorize:"To start you have to authorize!",
+    Payment:"Free tokens left, get subscribe to unlimited requests",
     Error: "Something went wrong, please try again later.",
     Prompt: {
       History: (content: string) =>

@@ -1,11 +1,12 @@
 import React, {FC, ReactNode} from 'react';
 import Locale from "@/app/locales";
 import styles from "./NewChat.module.scss"
+import {LoginButton} from "@telegram-auth/react";
 interface ISettingsButton{
     onClick:()=> void
     icon:ReactNode
 }
-const SettingsButton:FC<ISettingsButton> = ({onClick,icon}) => {
+export const SettingsButton:FC<ISettingsButton> = ({onClick,icon}) => {
     return (
         <button onClick={onClick} className={styles.settings}>
             <span>{icon}</span>
@@ -14,4 +15,5 @@ const SettingsButton:FC<ISettingsButton> = ({onClick,icon}) => {
     );
 };
 
-export default SettingsButton;
+
+

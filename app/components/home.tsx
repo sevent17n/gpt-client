@@ -4,12 +4,13 @@ import NewChat from "@/app/components/NewChat";
 
 require("../polyfill");
 
-import { useState, useEffect, useRef } from "react";
-import { LoginButton } from '@telegram-auth/react';
+import React, { useState, useEffect, useRef } from "react";
+
 import { IconButton } from "./button";
 import styles from "./home.module.scss";
 
 import SettingsIcon from "../icons/settings.svg";
+
 
 
 import BotIcon from "../icons/bot.svg";
@@ -19,12 +20,18 @@ import CloseIcon from "../icons/close.svg";
 
 import { useChatStore } from "../store";
 import { getCSSVar, isMobileScreen } from "../utils";
-import Locale from "../locales";
+import Locale, {getLang} from "../locales";
 import { Chat } from "./chat";
 
 import dynamic from "next/dynamic";
 import { ErrorBoundary } from "./error";
-import SettingsButton from "@/app/components/SettingsButton";
+import { SettingsButton} from "./SettingsButton";
+import {LoginButton} from "@telegram-auth/react";
+import clsx from "clsx";
+import {userStore} from "@/app/store/user";
+import {useStore} from "zustand";
+import Cookies from "js-cookie";
+
 
 
 export function Loading(props: { noLogo?: boolean }) {
@@ -150,12 +157,20 @@ function _Home() {
 
   // drag side bar
   const { onDragMouseDown } = useDragSideBar();
-
+  const [isAuthButtonShown,setIsAuthButtonShown] = useState(false)
+  const refreshToken = Cookies.get("refreshToken")
+  useEffect(()=> {
+    !refreshToken && setIsAuthButtonShown(true)
+  },[])
   useSwitchTheme();
-
+  // @ts-ignore
+  const {Login} = useStore(userStore)
   if (loading) {
     return <Loading />;
   }
+
+
+
   // @ts-ignore
   return (
     <div
@@ -203,6 +218,20 @@ function _Home() {
                 onClick={chatStore.deleteSession}
               />
             </div>
+            <div className={clsx(styles["sidebar-action"],styles.authButton) } >
+              {isAuthButtonShown &&<LoginButton
+                  botUsername={"Djipiti_test_bot"}
+                  buttonSize="large" // "large" | "medium" | "small"
+                  cornerRadius={5} // 0 - 20
+                  showAvatar={true} // true | false
+                  onAuthCallback={(data) => {
+                    Login(data)
+                    // call your backend here to validate the data and sign in the user
+                  }}
+                  lang={getLang()}
+              />}
+
+            </div>
             <div className={styles["sidebar-action"]}>
               <SettingsButton
                   icon={<SettingsIcon/>}
@@ -215,7 +244,6 @@ function _Home() {
             </div>
           </div>
         </div>
-
         <div
           className={styles["sidebar-drag"]}
           onMouseDown={(e) => onDragMouseDown(e as any)}

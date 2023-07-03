@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import Fuse from "fuse.js";
-import { getLang } from "../locales";
+
 
 export interface Prompt {
   id?: number;

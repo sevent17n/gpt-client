@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import axios from "axios"
-const APP_URL = `${process.env.APP_URL}/api`
 import Cookies from "js-cookie"
 
 export interface IUser {
@@ -24,9 +23,13 @@ export interface IInitialState {
   user: IUserState | null
   isLoading: boolean
 }
-export interface IEmailPassword {
-  email: string
-  password: string
+interface ITelegram{
+  first_name:string
+  hash:string
+  id:number
+  last_name:string
+  photo_url:string
+  username:string
 }
 export interface IAuthResponse extends ITokens {
   user: IUser & {
@@ -59,47 +62,18 @@ export const errorCatch = (error: any): string => {
 
 export const userStore = create(
   set => ({
-    Error:null,
-    Login:async (emailOrLogin: string, password: string) => {
+    Login:async (data:ITelegram) => {
       try{
         const response = await axios.post(
-          `http://localhost:5000/api/auth/login`,
-          {
-            emailOrLogin,
-            password
-          }
+          `http://localhost:5000/api/auth/telegram`,
+            data
         )
-        if (response.data.accessToken) {
-          saveToStorage(response.data)
-        }
-        return response
+        console.log(response)
+        saveToStorage(response.data)
+        return response.data
       }catch (e:any){
         set({error:e.response.data.message})
       }
-    },
-    Register:async (email: string,login:string, password: string)=> {
-      try{
-        const response = await axios.post(
-          `http://localhost:5000/api/auth/register`,
-          {
-            email,
-            login,
-            password
-          }
-        )
-          set({error:null})
-          if (response.data.accessToken) {
-            saveToStorage(response.data)
-          }
-          return response
-
-      }catch (e:any){
-       set({error:e.response.data.message})
-      }
-    },
-    Logout: () => {
-      removeTokensStorage()
-      localStorage.removeItem("user")
     },
     CheckAuth:async ()=> {
       try {

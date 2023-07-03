@@ -1,6 +1,7 @@
 {
     "name": "Джипити",
     "short_name": "Джипити",
+    "description":"Ваш персональный чат-бот ChatGPT. Лучше чем у OpenAI. Пользуйтесь бесплатно и без VPN.",
     "icons": [
       {
         "src": "/android-chrome-192x192.png",

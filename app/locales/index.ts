@@ -2,7 +2,7 @@
 import EN from "./en";
 import RU from "./ru"
 
-export type { LocaleType } from "./cn";
+export type { LocaleType } from "./ru";
 
 export const AllLangs = ["ru","en",] as const;
 type Lang = (typeof AllLangs)[number];

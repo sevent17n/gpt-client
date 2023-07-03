@@ -1,4 +1,5 @@
-import { SubmitKey } from "../store/app";
+import { SubmitKey } from "@/app/store";
+
 
 
 const ru = {
@@ -153,6 +154,8 @@ const ru = {
     Store: {
         DefaultTopic: "Новый чат",
         BotHello: "Привет, чем я могу быть полезен?",
+        Authorize:"Для начала авторизуйтесь!",
+        Payment:"У вас закончились бесплатные токены, оплатите подписку для бездимитных запросов",
         Error: "Случилось кое-что ужасное",
         Prompt: {
             History: (content: string) =>
@@ -175,5 +178,5 @@ const ru = {
         Add: "Add One",
     },
 };
-
+export type LocaleType = typeof ru;
 export default ru;

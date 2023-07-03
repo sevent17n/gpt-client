@@ -1,4 +1,4 @@
-import { create } from "zustand";
+import {create, useStore} from "zustand";
 import { persist } from "zustand/middleware";
 import { type ChatCompletionResponseMessage } from "openai";
 import {
@@ -179,6 +179,14 @@ export const BOT_HELLO: Message = createMessage({
   content: Locale.Store.BotHello,
 });
 
+export const AuthorizeMessage: Message = createMessage({
+  role: "assistant",
+  content: Locale.Store.Authorize,
+});
+export const PaymentMessage: Message = createMessage({
+  role: "assistant",
+  content: Locale.Store.Payment,
+});
 function createEmptySession(): ChatSession {
   const createDate = new Date().toLocaleString();
 
@@ -244,6 +252,7 @@ export const useChatStore = create<ChatStore>()(
       config: {
         ...DEFAULT_CONFIG,
       },
+
       clearSessions() {
         set(() => ({
           sessions: [createEmptySession()],

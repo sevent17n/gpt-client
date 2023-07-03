@@ -44,22 +44,35 @@
   }
 }
 .Telegram{
-  width:64px;
-  height:64px;
+  display: flex;
   align-self: flex-end;
-  background: white;
-  border: 1px solid var(--primary);
-  outline:none;
-  border-radius: 12px;
+  gap:20px;
+  align-items: flex-end;
+  div{
+    display: flex;
+    flex-direction: column;
+  }
+  a{
+    color: var(--primary);
+  }
+  button{
+    width:64px;
+    height:64px;
+    background: white;
+    border: 1px solid var(--primary);
+    outline:none;
+    border-radius: 12px;
 
-  svg{
-    width:80%;
-    height: auto;
-    path:first-child{
-      fill:var(--icon);
-    }
-    path:last-child{
-      fill:var(--icon-bg);
+    svg{
+      width:80%;
+      height: auto;
+      path:first-child{
+        fill:var(--icon);
+      }
+      path:last-child{
+        fill:var(--icon-bg);
+      }
     }
   }
+
 }

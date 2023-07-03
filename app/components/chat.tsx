@@ -19,6 +19,8 @@ import DarkIcon from "../icons/dark.svg";
 import AutoIcon from "../icons/auto.svg";
 import BottomIcon from "../icons/bottom.svg";
 
+
+
 import {
   Message,
   SubmitKey,
@@ -26,7 +28,7 @@ import {
   BOT_HELLO,
   ROLES,
   createMessage,
-  Theme,
+  Theme, AuthorizeMessage, PaymentMessage,
 } from "../store";
 
 import {
@@ -50,6 +52,11 @@ import styles from "./home.module.scss";
 import chatStyle from "./chat.module.scss";
 
 import { Input, Modal, showModal } from "./ui-lib";
+import {useStore} from "zustand";
+import {userStore} from "@/app/store/user";
+import axios from "axios";
+import Cookies from "js-cookie";
+
 
 const Markdown = dynamic(
   async () => memo((await import("./markdown")).Markdown),
@@ -480,16 +487,54 @@ export function Chat(props: {
     }
   };
 
+  const context: RenderMessage[] = session.context.slice();
+
+
+  if (
+      context.length === 0 &&
+      session.messages.at(0)?.content !== BOT_HELLO.content
+  ) {
+    const copiedHello = Object.assign({}, BOT_HELLO);
+    context.push(copiedHello);
+  }
+  const [isPaymentOpened,setIsPaymentOpened] = useState(false)
+  // @ts-ignore
+  const {CheckAuth} = useStore(userStore)
   // submit user input
-  const onUserSubmit = () => {
+  const onUserSubmit = async () => {
     if (userInput.length <= 0) return;
-    setIsLoading(true);
-    chatStore.onUserInput(userInput).then(() => setIsLoading(false));
-    setBeforeInput(userInput);
-    setUserInput("");
-    setPromptHints([]);
-    if (!isMobileScreen()) inputRef.current?.focus();
-    setAutoScroll(true);
+    const refreshToken = Cookies.get("refreshToken")
+    if(refreshToken) await CheckAuth()
+    const unparsedUser = localStorage.getItem("user")
+
+    if(unparsedUser) {
+      console.log(unparsedUser)
+      const user = JSON.parse(unparsedUser)
+      if(user.user){
+        if( !user.user.subscribe && user.user.usage >= 10){
+          setIsPaymentOpened(true)
+          const authorizeMessage = Object.assign({}, PaymentMessage);
+          context.push(authorizeMessage);
+          session.messages.push(authorizeMessage)
+          return
+        }
+        await  axios.post(`http://localhost:5000/api/auth/handleUsage`,{telegramID:user.user.id})
+        setIsLoading(true);
+        chatStore.onUserInput(userInput).then(() => setIsLoading(false));
+        setBeforeInput(userInput);
+        setUserInput("");
+        setPromptHints([]);
+        if (!isMobileScreen()) inputRef.current?.focus();
+        setAutoScroll(true);
+      }
+
+    }else{
+        const authorizeMessage = Object.assign({}, AuthorizeMessage);
+        context.push(authorizeMessage);
+        session.messages.push(authorizeMessage);
+    }
+
+
   };
 
   // stop response
@@ -541,16 +586,6 @@ export function Chat(props: {
 
   const config = useChatStore((state) => state.config);
 
-  const context: RenderMessage[] = session.context.slice();
-
-
-  if (
-    context.length === 0 &&
-    session.messages.at(0)?.content !== BOT_HELLO.content
-  ) {
-    const copiedHello = Object.assign({}, BOT_HELLO);
-    context.push(copiedHello);
-  }
 
   // preview messages
   const messages = context
@@ -597,8 +632,25 @@ export function Chat(props: {
     inputRef.current?.focus();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  const handlePay = async ()=> {
+    const unparsedUser = localStorage.getItem("user")
+    if(unparsedUser){
+      const user = JSON.parse(unparsedUser)
+      const response = await axios.post(`http://localhost:5000/api/payment`,user.user)
+      window.location.replace(response.data.confirmation.confirmation_url)
+    }
 
+  }
   return (
+      <>
+        {isPaymentOpened && <div className={styles.paymentModal}>
+          <div>
+            <h1>У вас кончились бесплатные токены</h1>
+            <p>Купите подписку на месяц для безлимитных запросов <br/> После оплаты подписка автоматически активируется на вашем аккаунте</p>
+            <button onClick={handlePay}>Оплатить 300&#8381;</button>
+           <p>Продолжая, вы соглашаетесь с  <a href="oferta_djipiti.txt" download>условиями оферты</a></p>
+          </div>
+        </div>}
     <div className={styles.chat} key={session.id}>
       <div className={styles["window-header"]}>
         <div className={styles["window-header-title"]}>
@@ -753,5 +805,6 @@ export function Chat(props: {
         </div>
       </div>
     </div>
+      </>
   );
 }
