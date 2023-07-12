@@ -1,7 +1,7 @@
 {
-    "name": "Джипити",
-    "short_name": "Джипити",
-    "description":"Ваш персональный чат-бот ChatGPT. Лучше чем у OpenAI. Пользуйтесь бесплатно и без VPN.",
+    "name": "ChatGPT Россия",
+    "short_name": "ChatGPT",
+    "description": "ChatGPT в вашем кармане. Лучший клиент chatGPT от OpenAI в России и СНГ. Только тут огромные возможности кастомизации, персонализации и уникальный функционал. ",
     "icons": [
       {
         "src": "/android-chrome-192x192.png",
