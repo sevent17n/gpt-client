@@ -20,7 +20,9 @@
 .container {
   @include container();
 }
+.telegramButton{
 
+}
 @media only screen and (min-width: 600px) {
   .tight-container {
     --window-width: 100vw;

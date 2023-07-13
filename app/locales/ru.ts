@@ -1,7 +1,6 @@
 import { SubmitKey } from "../store/config";
-import type { PartialLocaleType } from "./index";
-
-const ru: PartialLocaleType = {
+import { LocaleType } from "./index";
+const ru: any = {
   WIP: "Скоро...",
   Error: {
     Unauthorized:
@@ -9,6 +8,18 @@ const ru: PartialLocaleType = {
   },
   ChatItem: {
     ChatItemCount: (count: number) => `${count} сообщений`,
+  },
+  Auth: {
+    Warning: "Для начала авторизуйтесь!",
+  },
+  Payment: {
+    Buy: "Купить",
+    Alert: "Бесплатные токены кончились",
+    POne: "Купите подписку для получения безлимита на токены",
+    PTwo: "Стоимость подписки составляет 300₽, Она действует ровно месяц с момента приобретения.",
+    Continue: "Продолжая, вы соглашаетесь с",
+    Oferta: "условиями оферты",
+    Info: "Юридическая информация",
   },
   Chat: {
     SubTitle: (count: number) => `${count} сообщений с ChatGPT`,

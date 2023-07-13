@@ -1,19 +1,24 @@
 import { SubmitKey } from "../store/config";
-import { LocaleType } from "./index";
+import ru from "@/app/locales/ru";
 
 // if you are adding a new translation, please use PartialLocaleType instead of LocaleType
-const en: LocaleType = {
+const en = {
   WIP: "Coming Soon...",
   Error: {
     Unauthorized:
       "Unauthorized access, please enter access code in [auth](/#/auth) page.",
   },
+  Payment: {
+    Buy: "Buy",
+    Alert: "Free tokens have left",
+    POne: "Buy a subscription for a month to get unlimited tokens",
+    PTwo: "Subscription costs 300₽ and starts from the moment of purchase",
+    Continue: "By continuing you agree to",
+    Oferta: "the terms of the offer",
+    Info: "Legal information",
+  },
   Auth: {
-    Title: "Need Access Code",
-    Tips: "Please enter access code below",
-    Input: "access code",
-    Confirm: "Confirm",
-    Later: "Later",
+    Warning: "To start you have to authorize!",
   },
   ChatItem: {
     ChatItemCount: (count: number) => `${count} messages`,
@@ -345,5 +350,12 @@ const en: LocaleType = {
     Time: "Time",
   },
 };
+type DeepPartial<T> = T extends object
+  ? {
+      [P in keyof T]?: DeepPartial<T[P]>;
+    }
+  : T;
 
+export type LocaleType = typeof en;
+export type PartialLocaleType = DeepPartial<typeof en>;
 export default en;

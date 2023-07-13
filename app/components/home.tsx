@@ -1,5 +1,7 @@
 "use client";
 
+import { useStore } from "zustand";
+
 require("../polyfill");
 
 import { useState, useEffect } from "react";
@@ -15,8 +17,6 @@ import dynamic from "next/dynamic";
 import { Path, SlotID } from "../constant";
 import { ErrorBoundary } from "./error";
 
-import { getLang } from "../locales";
-
 import {
   HashRouter as Router,
   Routes,
@@ -25,10 +25,12 @@ import {
 } from "react-router-dom";
 import { SideBar } from "./sidebar";
 import { useAppConfig } from "../store/config";
-import { AuthPage } from "./auth";
 import { getClientConfig } from "../config/client";
 import { api } from "../client/api";
-import { useAccessStore } from "../store";
+import { useAccessStore, userStore } from "../store";
+import { useRouter } from "next/router";
+import { router } from "next/client";
+import { usePathname } from "next/navigation";
 
 export function Loading(props: { noLogo?: boolean }) {
   return (
@@ -119,7 +121,15 @@ function Screen() {
   useEffect(() => {
     loadAsyncGoogleFont();
   }, []);
-
+  const pathname = usePathname();
+  const { CheckAuth } = useStore(userStore);
+  // console.log(router);
+  useEffect(() => {
+    // Check if the router is ready
+    CheckAuth();
+    // Additional code for handling the pathname change
+  }, [pathname]);
+  CheckAuth();
   return (
     <div
       className={
@@ -128,28 +138,22 @@ function Screen() {
           config.tightBorder && !isMobileScreen
             ? styles["tight-container"]
             : styles.container
-        } ${getLang() === "ar" ? styles["rtl-screen"] : ""}`
+        }`
       }
     >
-      {isAuth ? (
-        <>
-          <AuthPage />
-        </>
-      ) : (
-        <>
-          <SideBar className={isHome ? styles["sidebar-show"] : ""} />
+      <>
+        <SideBar className={isHome ? styles["sidebar-show"] : ""} />
 
-          <div className={styles["window-content"]} id={SlotID.AppBody}>
-            <Routes>
-              <Route path={Path.Home} element={<Chat />} />
-              <Route path={Path.NewChat} element={<NewChat />} />
-              <Route path={Path.Masks} element={<MaskPage />} />
-              <Route path={Path.Chat} element={<Chat />} />
-              <Route path={Path.Settings} element={<Settings />} />
-            </Routes>
-          </div>
-        </>
-      )}
+        <div className={styles["window-content"]} id={SlotID.AppBody}>
+          <Routes>
+            <Route path={Path.Home} element={<Chat />} />
+            <Route path={Path.NewChat} element={<NewChat />} />
+            <Route path={Path.Masks} element={<MaskPage />} />
+            <Route path={Path.Chat} element={<Chat />} />
+            <Route path={Path.Settings} element={<Settings />} />
+          </Routes>
+        </div>
+      </>
     </div>
   );
 }

@@ -6,7 +6,7 @@ import React, {
   useMemo,
   useCallback,
 } from "react";
-
+import { v4 as uuidv4 } from "uuid";
 import SendWhiteIcon from "../icons/send-white.svg";
 import BrainIcon from "../icons/brain.svg";
 import RenameIcon from "../icons/rename.svg";
@@ -43,6 +43,7 @@ import {
   useAppConfig,
   DEFAULT_TOPIC,
   ModelType,
+  userStore,
 } from "../store";
 
 import {
@@ -56,7 +57,7 @@ import dynamic from "next/dynamic";
 
 import { ChatControllerPool } from "../client/controller";
 import { Prompt, usePromptStore } from "../store/prompt";
-import Locale from "../locales";
+import Locale, { getLang } from "../locales";
 
 import { IconButton } from "./button";
 import styles from "./chat.module.scss";
@@ -78,6 +79,12 @@ import { ChatCommandPrefix, useChatCommand, useCommand } from "../command";
 import { prettyObject } from "../utils/format";
 import { ExportMessageModal } from "./exporter";
 import { getClientConfig } from "../config/client";
+import { useStore } from "zustand";
+import axios from "axios";
+import Cookies from "js-cookie";
+import { LoginButton } from "@telegram-auth/react";
+import { router } from "next/client";
+import { useRouter } from "next/router";
 
 const Markdown = dynamic(async () => (await import("./markdown")).Markdown, {
   loading: () => <LoadingIcon />,
@@ -611,23 +618,42 @@ export function Chat() {
       }
     }
   };
-
-  const doSubmit = (userInput: string) => {
-    if (userInput.trim() === "") return;
-    const matchCommand = chatCommands.match(userInput);
-    if (matchCommand.matched) {
-      setUserInput("");
-      setPromptHints([]);
-      matchCommand.invoke();
-      return;
+  const [isPaymentOpened, setIsPaymentOpened] = useState(false);
+  const [isNeedAuth, setNeedAuth] = useState(false);
+  const { CheckAuth, Login } = useStore(userStore);
+  console.log(localStorage.getItem("user"));
+  const doSubmit = async (userInput: string) => {
+    const accessToken = Cookies.get("access-token");
+    accessToken && (await CheckAuth());
+    const unparsedUser = localStorage.getItem("user");
+    if (unparsedUser) {
+      const user = JSON.parse(unparsedUser);
+      if (user) {
+        if (!user.subscribe && user.usage >= 10) {
+          setIsPaymentOpened(true);
+          return;
+        }
+        if (userInput.trim() === "") return;
+        const matchCommand = chatCommands.match(userInput);
+        if (matchCommand.matched) {
+          setUserInput("");
+          setPromptHints([]);
+          matchCommand.invoke();
+          return;
+        }
+        setIsLoading(true);
+        chatStore.onUserInput(userInput).then(() => setIsLoading(false));
+        localStorage.setItem(LAST_INPUT_KEY, userInput);
+        setUserInput("");
+        setPromptHints([]);
+        if (!isMobileScreen) inputRef.current?.focus();
+        setAutoScroll(true);
+      } else {
+        setNeedAuth(true);
+      }
+    } else {
+      setNeedAuth(true);
     }
-    setIsLoading(true);
-    chatStore.onUserInput(userInput).then(() => setIsLoading(false));
-    localStorage.setItem(LAST_INPUT_KEY, userInput);
-    setUserInput("");
-    setPromptHints([]);
-    if (!isMobileScreen) inputRef.current?.focus();
-    setAutoScroll(true);
   };
 
   const onPromptSelect = (prompt: RenderPompt) => {
@@ -883,6 +909,19 @@ export function Chat() {
     },
   });
 
+  const handlePay = async () => {
+    const unparsedUser = localStorage.getItem("user");
+    if (unparsedUser) {
+      const user = JSON.parse(unparsedUser);
+      console.log(user);
+      const response = await axios.post(
+        `http://localhost:5000/api_server/payment`,
+        user,
+      );
+
+      window.location.replace(response.data.confirmation.confirmation_url);
+    }
+  };
   return (
     <div className={styles.chat} key={session.id}>
       <div className="window-header" data-tauri-drag-region>
@@ -1089,7 +1128,48 @@ export function Chat() {
 
       <div className={styles["chat-input-panel"]}>
         <PromptHints prompts={promptHints} onPromptSelect={onPromptSelect} />
-
+        {isNeedAuth && (
+          <div className={styles.authAlert}>
+            <h3>{Locale.Auth.Warning}</h3>{" "}
+            <LoginButton
+              botUsername={"ChatGPT_RUSSIA_auth_bot"}
+              buttonSize="large" // "large" | "medium" | "small"
+              cornerRadius={5} // 0 - 20
+              showAvatar={true} // true | false
+              onAuthCallback={(data) => {
+                Login(data);
+                setNeedAuth(false);
+              }}
+              lang={getLang()}
+            />
+          </div>
+        )}
+        {isPaymentOpened && (
+          <div>
+            <h1>{Locale.Payment.Alert}</h1>
+            <p>
+              {Locale.Payment.POne} <br />
+              {Locale.Payment.PTwo}
+            </p>
+            <IconButton
+              text={Locale.Payment.Buy}
+              type="primary"
+              className={styles.buyButton}
+              onClick={handlePay}
+            />
+            <p>
+              {Locale.Payment.Continue}{" "}
+              <a href="oferta_djipiti.txt" download>
+                {Locale.Payment.Oferta}
+              </a>
+            </p>
+            <p>
+              <a href="legal_info.txt" download>
+                {Locale.Payment.Info}
+              </a>
+            </p>
+          </div>
+        )}
         <ChatActions
           showPromptModal={() => setShowPromptModal(true)}
           scrollToBottom={scrollToBottom}
@@ -1100,7 +1180,6 @@ export function Chat() {
               setPromptHints([]);
               return;
             }
-
             inputRef.current?.focus();
             setUserInput("/");
             onSearch("");

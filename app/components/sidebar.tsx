@@ -13,7 +13,7 @@ import PluginIcon from "../icons/plugin.svg";
 
 import Locale, { getLang } from "../locales";
 
-import { useAppConfig, useChatStore } from "../store";
+import { useAppConfig, useChatStore, userStore } from "../store";
 
 import {
   MAX_SIDEBAR_WIDTH,
@@ -28,6 +28,7 @@ import { useMobileScreen } from "../utils";
 import dynamic from "next/dynamic";
 import { showConfirm, showToast } from "./ui-lib";
 import { LoginButton } from "@telegram-auth/react";
+import { useStore } from "zustand";
 
 const ChatList = dynamic(async () => (await import("./chat-list")).ChatList, {
   loading: () => null,
@@ -109,7 +110,7 @@ export function SideBar(props: { className?: string }) {
   const config = useAppConfig();
 
   useHotKey();
-
+  const { Login } = useStore(userStore);
   return (
     <div
       className={`${styles.sidebar} ${props.className} ${
@@ -154,19 +155,6 @@ export function SideBar(props: { className?: string }) {
         }}
       >
         <ChatList narrow={shouldNarrow} />
-      </div>
-      <div className={styles["sidebar-tail"]}>
-        <LoginButton
-          botUsername={"Djipiti_test_bot"}
-          buttonSize="large" // "large" | "medium" | "small"
-          cornerRadius={5} // 0 - 20
-          showAvatar={true} // true | false
-          // onAuthCallback={(data) => {
-          //   Login(data)
-          //   // call your backend here to validate the data and sign in the user
-          // }}
-          lang={getLang()}
-        />
       </div>
       <div className={styles["sidebar-tail"]}>
         <div className={styles["sidebar-actions"]}>
