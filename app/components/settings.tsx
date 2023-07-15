@@ -667,6 +667,16 @@ export function Settings() {
         )}
 
         <DangerItems />
+	<p>
+          <a href="oferta_djipiti.txt" download>
+            {Locale.Oferta}
+          </a>
+        </p>
+        <p>
+          <a href="legal_info.txt" download>
+            {Locale.Payment.Info}
+          </a>
+        </p>
       </div>
     </ErrorBoundary>
   );

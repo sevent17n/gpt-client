@@ -641,6 +641,10 @@ export function Chat() {
           matchCommand.invoke();
           return;
         }
+        await CheckAuth();
+        await axios.post(`https://djipiti.ru/api_server/auth/handleUsage`, {
+          telegramID: user.id,
+        });
         setIsLoading(true);
         chatStore.onUserInput(userInput).then(() => setIsLoading(false));
         localStorage.setItem(LAST_INPUT_KEY, userInput);
@@ -915,7 +919,7 @@ export function Chat() {
       const user = JSON.parse(unparsedUser);
       console.log(user);
       const response = await axios.post(
-        `http://localhost:5000/api_server/payment`,
+        `https://djipiti.ru/api_server/payment`,
         user,
       );
 

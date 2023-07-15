@@ -9,6 +9,7 @@ const ru: any = {
   ChatItem: {
     ChatItemCount: (count: number) => `${count} сообщений`,
   },
+  Oferta: "Условия оферты",
   Auth: {
     Warning: "Для начала авторизуйтесь!",
   },

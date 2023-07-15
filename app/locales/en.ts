@@ -17,6 +17,7 @@ const en = {
     Oferta: "the terms of the offer",
     Info: "Legal information",
   },
+  Oferta: "The terms of the offer",
   Auth: {
     Warning: "To start you have to authorize!",
   },
