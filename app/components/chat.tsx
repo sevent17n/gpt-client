@@ -85,6 +85,7 @@ import Cookies from "js-cookie";
 import { LoginButton } from "@telegram-auth/react";
 import { router } from "next/client";
 import { useRouter } from "next/router";
+import {FieldValues, SubmitHandler, useForm} from "react-hook-form";
 
 const Markdown = dynamic(async () => (await import("./markdown")).Markdown, {
   loading: () => <LoadingIcon />,
@@ -913,18 +914,28 @@ export function Chat() {
     },
   });
 
-  const handlePay = async () => {
-    const unparsedUser = localStorage.getItem("user");
-    if (unparsedUser) {
-      const user = JSON.parse(unparsedUser);
-      console.log(user);
-      const response = await axios.post(
-        `https://djipiti.ru/api_server/payment`,
-        user,
-      );
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<{email:string}>()
+  const handlePay:SubmitHandler<{email:string}> = async (email) => {
+    if (!errors.email) {
+      const unparsedUser = localStorage.getItem("user");
+      if (unparsedUser) {
+        const user = JSON.parse(unparsedUser);
+        console.log(user);
+        const response = await axios.post(
+            `https://djipiti.ru/api_server/payment`,{
+              ...user,
+              ...email
+            }
 
-      window.location.replace(response.data.confirmation.confirmation_url);
+        );
+        window.location.replace(response.data.confirmation.confirmation_url);
+      }
     }
+
   };
   return (
     <div className={styles.chat} key={session.id}>
@@ -1155,12 +1166,23 @@ export function Chat() {
               {Locale.Payment.POne} <br />
               {Locale.Payment.PTwo}
             </p>
-            <IconButton
-              text={Locale.Payment.Buy}
-              type="primary"
-              className={styles.buyButton}
-              onClick={handlePay}
-            />
+            <form onSubmit={handleSubmit(handlePay)}>
+              <h4>{Locale.Payment.Email}*</h4>
+              <input  {...register("email", { required: true, pattern: /^\S+@\S+$/i })} type="text" placeholder={"Email"}/>
+              {errors.email && errors.email.type === "required" && (
+                  <p className="error-message">{Locale.Payment.Email_required}</p>
+              )}
+              {errors.email && errors.email.type === "pattern" && (
+                  <p className="error-message">{Locale.Payment.Email_invalid}</p>
+              )}
+              <IconButton
+                  text={Locale.Payment.Buy}
+                  type="primary"
+                  className={styles.buyButton}
+                  disabled={!!errors.email}
+              />
+            </form>
+
             <p>
               {Locale.Payment.Continue}{" "}
               <a href="oferta_djipiti.txt" download>

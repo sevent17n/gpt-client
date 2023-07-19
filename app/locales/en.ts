@@ -10,6 +10,9 @@ const en = {
   },
   Payment: {
     Buy: "Buy",
+    Email_invalid:"Invalid email",
+    Email_required:"Email is required",
+    Email:"Enter your email",
     Alert: "Free tokens have left",
     POne: "Buy a subscription for a month to get unlimited tokens",
     PTwo: "Subscription costs 300₽ and starts from the moment of purchase",
