@@ -1,5 +1,5 @@
 "use client";
-
+import Head from 'next/head';
 import { useStore } from "zustand";
 
 require("../polyfill");
@@ -143,7 +143,16 @@ function Screen() {
     >
       <>
         <SideBar className={isHome ? styles["sidebar-show"] : ""} />
-
+        <Head>
+        <title>
+          ChatGPT Россия
+        </title>
+        <meta
+          name="description"
+          content="ChatGPT в вашем кармане. Лучший клиент chatGPT от OpenAI в России и СНГ. Только тут огромные возможности кастомизации, персонализации и уникальный функционал."
+          key="desc"
+        />
+      </Head>
         <div className={styles["window-content"]} id={SlotID.AppBody}>
           <Routes>
             <Route path={Path.Home} element={<Chat />} />
