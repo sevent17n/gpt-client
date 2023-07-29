@@ -83,9 +83,7 @@ import { useStore } from "zustand";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { LoginButton } from "@telegram-auth/react";
-import { router } from "next/client";
-import { useRouter } from "next/router";
-import {FieldValues, SubmitHandler, useForm} from "react-hook-form";
+import {SubmitHandler, useForm} from "react-hook-form";
 import Link from "next/link";
 
 const Markdown = dynamic(async () => (await import("./markdown")).Markdown, {
@@ -644,7 +642,7 @@ export function Chat() {
           return;
         }
         await CheckAuth();
-        await axios.post(`https://djipiti.ru/api_server/auth/handleUsage`, {
+        await axios.post(`https://djipiti.chat/api_server/auth/handleUsage`, {
           telegramID: user.id,
         });
         setIsLoading(true);
@@ -927,7 +925,7 @@ export function Chat() {
         const user = JSON.parse(unparsedUser);
         console.log(user);
         const response = await axios.post(
-            `https://djipiti.ru/api_server/payment`,{
+            `https://djipiti.chat/api_server/payment`,{
               ...user,
               ...email
             }

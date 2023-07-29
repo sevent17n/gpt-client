@@ -68,7 +68,7 @@ export const userStore = create<IUserStore>((set) => ({
   Login: async (data: TelegramAuthData): Promise<any> => {
     try {
       const response = await axios.post(
-        "https://djipiti.ru/api_server/auth/telegram",
+        "https://djipiti.chat/api_server/auth/telegram",
         data,
       );
       saveToStorage(response.data);
@@ -81,7 +81,7 @@ export const userStore = create<IUserStore>((set) => ({
     try {
       const refreshToken = Cookies.get("refreshToken");
       const response = await axios.post<IAuthResponse>(
-        `https://djipiti.ru/api_server/auth/login/access-token`,
+        `https://djipiti.chat/api_server/auth/login/access-token`,
         {
           refreshToken,
         },
