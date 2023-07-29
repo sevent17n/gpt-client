@@ -668,10 +668,10 @@ export function Settings() {
 
         <DangerItems />
         <p>
-          <Link href={"/legal_info"}>{Locale.Oferta}</Link>
+          <Link href={"/oferta"}>{Locale.Oferta}</Link>
         </p>
         <p>
-          <Link href={"/legal_info"}>{Locale.Payment.Info}</Link>
+          <Link href={"/oferta"}>{Locale.Payment.Info}</Link>
         </p>
       </div>
     </ErrorBoundary>

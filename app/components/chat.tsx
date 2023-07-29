@@ -86,6 +86,7 @@ import { LoginButton } from "@telegram-auth/react";
 import { router } from "next/client";
 import { useRouter } from "next/router";
 import {FieldValues, SubmitHandler, useForm} from "react-hook-form";
+import Link from "next/link";
 
 const Markdown = dynamic(async () => (await import("./markdown")).Markdown, {
   loading: () => <LoadingIcon />,
@@ -1147,7 +1148,7 @@ export function Chat() {
           <div className={styles.authAlert}>
             <h3>{Locale.Auth.Warning}</h3>{" "}
             <LoginButton
-              botUsername={"ChatGPT_RUSSIA_auth_bot"}
+              botUsername={"Djipiti_Bot"}
               buttonSize="large" // "large" | "medium" | "small"
               cornerRadius={5} // 0 - 20
               showAvatar={true} // true | false
@@ -1185,14 +1186,16 @@ export function Chat() {
 
             <p>
               {Locale.Payment.Continue}{" "}
-              <a href="oferta_djipiti.txt" download>
+              <Link href={"/oferta"}>
                 {Locale.Payment.Oferta}
-              </a>
+              </Link>
             </p>
             <p>
-              <a href="legal_info.txt" download>
+              <Link href={"/oferta"}>
                 {Locale.Payment.Info}
-              </a>
+              </Link>
+
+
             </p>
           </div>
         )}

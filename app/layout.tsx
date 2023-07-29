@@ -18,7 +18,7 @@ export const metadata = {
     { media: "(prefers-color-scheme: dark)", color: "#151515" },
   ],
   appleWebApp: {
-    title: "ChatGPT Россия",
+    title: "ChatGPT на русском языке в России и СНГ | Djipiti | Джипити",
     statusBarStyle: "default",
   },
 };
