@@ -6,14 +6,27 @@ import { getClientConfig } from "./config/client";
 import Script from "next/script";
 
 export const metadata = {
-  title: "ChatGPT на русском языке в России и СНГ | Djipiti | Джипити",
-  description: "Djipiti - это улучшенная версия ChatGPT с невероятными возможностями кастомизации и персонализации! Теперь вы можете полностью настроить свой опыт общения с искусственным интеллектом. Выбирайте стиль диалога, настраивайте предпочтения и уровень формальности, чтобы Джипити стал вашим идеальным собеседником.",
+  title: "Джипити",
+  description:
+    "Djipiti - это улучшенная версия ChatGPT с невероятными возможностями кастомизации и персонализации! Теперь вы можете полностью настроить свой опыт общения с искусственным интеллектом. Выбирайте стиль диалога, настраивайте предпочтения и уровень формальности, чтобы Джипити стал вашим идеальным собеседником.",
   viewport: {
     width: "device-width",
     initialScale: 1,
     maximumScale: 1,
   },
-  keywords:["ChatGPT на русском,ChatGPT, Chat, GPT, Россия, России, русском, русский, чатгпт, чат, гпт, djipiti, jipiti, джипити, жипити, онлайн, ChatGPT в России ChatGPT","ЧатГПТ","Чат Джипити","Чат Жипити","Djipiti","Нейросети","OpenAI","ChatGPT Россия","ChatGPT на русском","Чат джипити на русском","Чат Жипити в России"],
+  keywords: [
+    "ChatGPT на русском,ChatGPT, Chat, GPT, Россия, России, русском, русский, чатгпт, чат, гпт, djipiti, jipiti, джипити, жипити, онлайн, ChatGPT в России ChatGPT",
+    "ЧатГПТ",
+    "Чат Джипити",
+    "Чат Жипити",
+    "Djipiti",
+    "Нейросети",
+    "OpenAI",
+    "ChatGPT Россия",
+    "ChatGPT на русском",
+    "Чат джипити на русском",
+    "Чат Жипити в России",
+  ],
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#fafafa" },
     { media: "(prefers-color-scheme: dark)", color: "#151515" },
@@ -35,22 +48,25 @@ export default function RootLayout({
         <meta name="config" content={JSON.stringify(getClientConfig())} />
         <link rel="manifest" href="/site.webmanifest"></link>
         <Script src="/serviceWorkerRegister.js" defer></Script>
-        <Script async src="https://www.googletagmanager.com/gtag/js?id=G-NSWE0W06R3"/>
         <Script
-            id={"google"}
-            dangerouslySetInnerHTML={{
-              __html: `
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-NSWE0W06R3"
+        />
+        <Script
+          id={"google"}
+          dangerouslySetInnerHTML={{
+            __html: `
                  (window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
   gtag('config', 'G-NSWE0W06R3');
               `,
-            }}
+          }}
         />
         <Script
-            id={"yandex"}
-            dangerouslySetInnerHTML={{
-              __html: `
+          id={"yandex"}
+          dangerouslySetInnerHTML={{
+            __html: `
                  (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a[]).push(arguments)};
    m[i].l=1*new Date();
    for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
@@ -64,14 +80,14 @@ export default function RootLayout({
         webvisor:true
    });
               `,
-            }}
+          }}
         />
         <noscript>
           <div>
             <img
-                src="https://mc.yandex.ru/watch/93246004"
-                style={{ position: "absolute", left: "-9999px" }}
-                alt=""
+              src="https://mc.yandex.ru/watch/93246004"
+              style={{ position: "absolute", left: "-9999px" }}
+              alt=""
             />
           </div>
         </noscript>
