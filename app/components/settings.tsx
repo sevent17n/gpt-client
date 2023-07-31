@@ -2,12 +2,12 @@ import { useState, useEffect, useMemo } from "react";
 
 import styles from "./settings.module.scss";
 
-import Image from "next/image"
+import Image from "next/image";
 import AddIcon from "../icons/add.svg";
 import CloseIcon from "../icons/close.svg";
 import CopyIcon from "../icons/copy.svg";
 import ClearIcon from "../icons/clear.svg";
-import tg from "./tg.jpg"
+import tg from "./tg.jpg";
 import EditIcon from "../icons/edit.svg";
 import EyeIcon from "../icons/eye.svg";
 import {
@@ -28,7 +28,8 @@ import {
   Theme,
   useUpdateStore,
   useAccessStore,
-  useAppConfig, userStore,
+  useAppConfig,
+  userStore,
 } from "../store";
 
 import Locale, {
@@ -47,7 +48,7 @@ import { useNavigate } from "react-router-dom";
 import { Avatar, AvatarPicker } from "./emoji";
 import { getClientConfig } from "../config/client";
 import { nanoid } from "nanoid";
-import {useStore} from "zustand";
+import { useStore } from "zustand";
 
 function EditPromptModal(props: { id: string; onClose: () => void }) {
   const promptStore = usePromptStore();
@@ -205,8 +206,9 @@ function UserPromptModal(props: { onClose?: () => void }) {
 function DangerItems() {
   const chatStore = useChatStore();
   const appConfig = useAppConfig();
-  const { Logout } = useStore(userStore)
-  const  user = localStorage.getItem("user");
+  const { Logout } = useStore(userStore);
+  const user = localStorage.getItem("user");
+  const [isHideLogout, setIsHideLogout] = useState(false);
   return (
     <List>
       <ListItem
@@ -237,20 +239,23 @@ function DangerItems() {
           type="danger"
         />
       </ListItem>
-      {user ? <ListItem
-          title={Locale.Logout}
-      >
-        <IconButton
+      {!isHideLogout && user ? (
+        <ListItem title={Locale.Logout}>
+          <IconButton
             text={Locale.Logout}
-            onClick={() => Logout()}
+            onClick={() => {
+              Logout();
+              setIsHideLogout(true);
+            }}
             type="danger"
-        />
-      </ListItem> : <></>}
+          />
+        </ListItem>
+      ) : (
+        <></>
+      )}
     </List>
   );
 }
-
-
 
 export function Settings() {
   const navigate = useNavigate();
@@ -323,7 +328,6 @@ export function Settings() {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
 
   return (
     <ErrorBoundary>
@@ -491,7 +495,6 @@ export function Settings() {
         </List>
 
         <List>
-
           <ListItem
             title={Locale.Settings.CustomModel.Title}
             subTitle={Locale.Settings.CustomModel.SubTitle}
@@ -508,7 +511,6 @@ export function Settings() {
             ></input>
           </ListItem>
         </List>
-
 
         <List>
           <ModelConfigList
@@ -532,9 +534,8 @@ export function Settings() {
           </p>
 
           <Link href={"https://t.me/Djipiti"}>
-            <Image src={tg} alt={'Telegram'}/>
+            <Image src={tg} alt={"Telegram"} />
           </Link>
-
         </div>
       </div>
     </ErrorBoundary>
