@@ -13,11 +13,12 @@ const ru: any = {
   Auth: {
     Warning: "Для начала авторизуйтесь!",
   },
+  LogoutButton: "Выход",
   Payment: {
     Buy: "Купить",
-    Email:"Введите ваш Email",
-    Email_invalid:"Неправильный формат Email",
-    Email_required:"Email is required",
+    Email: "Введите ваш Email",
+    Email_invalid: "Неправильный формат Email",
+    Email_required: "Email is required",
     Alert: "Бесплатные токены кончились",
     POne: "Купите подписку для получения безлимита на токены",
     PTwo: "Стоимость подписки составляет 300₽, Она действует ровно месяц с момента приобретения.",
@@ -51,7 +52,7 @@ const ru: any = {
       SaveAs: "Сохранить как маску",
     },
   },
-  Assistant:"Твой личный помощник",
+  Assistant: "Твой личный помощник",
   Export: {
     Title: "Все сообщения",
     Copy: "Копировать все",
@@ -228,7 +229,7 @@ const ru: any = {
   Plugin: {
     Name: "Плагин",
   },
-  Logout:"Выйти из аккаунта",
+  Logout: "Выйти из аккаунта",
   Mask: {
     Name: "Маска",
     Page: {

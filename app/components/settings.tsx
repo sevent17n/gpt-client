@@ -242,7 +242,7 @@ function DangerItems() {
       {!isHideLogout && user ? (
         <ListItem title={Locale.Logout}>
           <IconButton
-            text={Locale.Logout}
+            text={Locale.LogoutButton}
             onClick={() => {
               Logout();
               setIsHideLogout(true);
@@ -534,7 +534,7 @@ export function Settings() {
           </p>
 
           <Link href={"https://t.me/Djipiti"}>
-            <Image src={tg} alt={"Telegram"} />
+            <Image src={tg} alt={"Telegram"} unoptimized />
           </Link>
         </div>
       </div>
