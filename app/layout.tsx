@@ -12,7 +12,7 @@ export const metadata = {
     initialScale: 1,
     maximumScale: 1,
   },
-  keywords:["ChatGPT","ЧатГПТ","Чат Джипити","Чат Жипити","Djipiti","Нейросети","OpenAI","ChatGPT Россия","ChatGPT на русском","Чат джипити на русском","Чат Жипити в России"],
+  keywords:["ChatGPT на русском,ChatGPT, Chat, GPT, Россия, России, русском, русский, чатгпт, чат, гпт, djipiti, jipiti, джипити, жипити, онлайн, ChatGPT в России ChatGPT","ЧатГПТ","Чат Джипити","Чат Жипити","Djipiti","Нейросети","OpenAI","ChatGPT Россия","ChatGPT на русском","Чат джипити на русском","Чат Жипити в России"],
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#fafafa" },
     { media: "(prefers-color-scheme: dark)", color: "#151515" },

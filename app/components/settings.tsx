@@ -2,12 +2,12 @@ import { useState, useEffect, useMemo } from "react";
 
 import styles from "./settings.module.scss";
 
-import ResetIcon from "../icons/reload.svg";
+import Image from "next/image"
 import AddIcon from "../icons/add.svg";
 import CloseIcon from "../icons/close.svg";
 import CopyIcon from "../icons/copy.svg";
 import ClearIcon from "../icons/clear.svg";
-import LoadingIcon from "../icons/three-dots.svg";
+import tg from "./tg.png"
 import EditIcon from "../icons/edit.svg";
 import EyeIcon from "../icons/eye.svg";
 import {
@@ -15,7 +15,6 @@ import {
   List,
   ListItem,
   Modal,
-  PasswordInput,
   Popover,
   Select,
   showConfirm,
@@ -29,7 +28,7 @@ import {
   Theme,
   useUpdateStore,
   useAccessStore,
-  useAppConfig,
+  useAppConfig, userStore,
 } from "../store";
 
 import Locale, {
@@ -47,8 +46,8 @@ import { InputRange } from "./input-range";
 import { useNavigate } from "react-router-dom";
 import { Avatar, AvatarPicker } from "./emoji";
 import { getClientConfig } from "../config/client";
-import { useSyncStore } from "../store/sync";
 import { nanoid } from "nanoid";
+import {useStore} from "zustand";
 
 function EditPromptModal(props: { id: string; onClose: () => void }) {
   const promptStore = usePromptStore();
@@ -241,77 +240,7 @@ function DangerItems() {
   );
 }
 
-function SyncItems() {
-  const syncStore = useSyncStore();
-  const webdav = syncStore.webDavConfig;
 
-  // not ready: https://github.com/Yidadaa/ChatGPT-Next-Web/issues/920#issuecomment-1609866332
-  return null;
-
-  return (
-    <List>
-      <ListItem
-        title={"上次同步：" + new Date().toLocaleString()}
-        subTitle={"20 次对话，100 条消息，200 提示词，20 面具"}
-      >
-        <IconButton
-          icon={<ResetIcon />}
-          text="同步"
-          onClick={() => {
-            syncStore.check().then(console.log);
-          }}
-        />
-      </ListItem>
-
-      <ListItem
-        title={"本地备份"}
-        subTitle={"20 次对话，100 条消息，200 提示词，20 面具"}
-      ></ListItem>
-
-      <ListItem
-        title={"Web Dav Server"}
-        subTitle={Locale.Settings.AccessCode.SubTitle}
-      >
-        <input
-          value={webdav.server}
-          type="text"
-          placeholder={"https://example.com"}
-          onChange={(e) => {
-            syncStore.update(
-              (config) => (config.server = e.currentTarget.value),
-            );
-          }}
-        />
-      </ListItem>
-
-      <ListItem title="Web Dav User Name" subTitle="user name here">
-        <input
-          value={webdav.username}
-          type="text"
-          placeholder={"username"}
-          onChange={(e) => {
-            syncStore.update(
-              (config) => (config.username = e.currentTarget.value),
-            );
-          }}
-        />
-      </ListItem>
-
-      <ListItem title="Web Dav Password" subTitle="password here">
-        <input
-          value={webdav.password}
-          type="text"
-          placeholder={"password"}
-          onChange={(e) => {
-            syncStore.update(
-              (config) => (config.password = e.currentTarget.value),
-            );
-          }}
-        />
-      </ListItem>
-    </List>
-  );
-}
 
 export function Settings() {
   const navigate = useNavigate();
@@ -385,18 +314,13 @@ export function Settings() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const clientConfig = useMemo(() => getClientConfig(), []);
-  const showAccessCode = enabledAccessControl && !clientConfig?.isApp;
-
+  const { Logout } = useStore(userStore)
   return (
     <ErrorBoundary>
       <div className="window-header" data-tauri-drag-region>
         <div className="window-header-title">
           <div className="window-header-main-title">
             {Locale.Settings.Title}
-          </div>
-          <div className="window-header-sub-title">
-            {Locale.Settings.SubTitle}
           </div>
         </div>
         <div className="window-actions">
@@ -557,80 +481,6 @@ export function Settings() {
         </List>
 
         <List>
-          {showAccessCode ? (
-            <ListItem
-              title={Locale.Settings.AccessCode.Title}
-              subTitle={Locale.Settings.AccessCode.SubTitle}
-            >
-              <PasswordInput
-                value={accessStore.accessCode}
-                type="text"
-                placeholder={Locale.Settings.AccessCode.Placeholder}
-                onChange={(e) => {
-                  accessStore.updateCode(e.currentTarget.value);
-                }}
-              />
-            </ListItem>
-          ) : (
-            <></>
-          )}
-
-          {!accessStore.hideUserApiKey ? (
-            <>
-              <ListItem
-                title={Locale.Settings.Endpoint.Title}
-                subTitle={Locale.Settings.Endpoint.SubTitle}
-              >
-                <input
-                  type="text"
-                  value={accessStore.openaiUrl}
-                  placeholder="https://api.openai.com/"
-                  onChange={(e) =>
-                    accessStore.updateOpenAiUrl(e.currentTarget.value)
-                  }
-                ></input>
-              </ListItem>
-              <ListItem
-                title={Locale.Settings.Token.Title}
-                subTitle={Locale.Settings.Token.SubTitle}
-              >
-                <PasswordInput
-                  value={accessStore.token}
-                  type="text"
-                  placeholder={Locale.Settings.Token.Placeholder}
-                  onChange={(e) => {
-                    accessStore.updateToken(e.currentTarget.value);
-                  }}
-                />
-              </ListItem>
-            </>
-          ) : null}
-
-          {!accessStore.hideBalanceQuery ? (
-            <ListItem
-              title={Locale.Settings.Usage.Title}
-              subTitle={
-                showUsage
-                  ? loadingUsage
-                    ? Locale.Settings.Usage.IsChecking
-                    : Locale.Settings.Usage.SubTitle(
-                        usage?.used ?? "[?]",
-                        usage?.subscription ?? "[?]",
-                      )
-                  : Locale.Settings.Usage.NoAccess
-              }
-            >
-              {!showUsage || loadingUsage ? (
-                <div />
-              ) : (
-                <IconButton
-                  icon={<ResetIcon></ResetIcon>}
-                  text={Locale.Settings.Usage.Check}
-                  onClick={() => checkUsage(true)}
-                />
-              )}
-            </ListItem>
-          ) : null}
 
           <ListItem
             title={Locale.Settings.CustomModel.Title}
@@ -649,7 +499,6 @@ export function Settings() {
           </ListItem>
         </List>
 
-        <SyncItems />
 
         <List>
           <ModelConfigList
@@ -667,12 +516,18 @@ export function Settings() {
         )}
 
         <DangerItems />
-        <p>
-          <Link href={"/oferta"}>{Locale.Oferta}</Link>
-        </p>
-        <p>
-          <Link href={"/oferta"}>{Locale.Payment.Info}</Link>
-        </p>
+        <div className={styles.offer}>
+          <p>
+            <Link href={"/oferta"}>{Locale.Oferta}</Link>
+          </p>
+          <button onClick={() => Logout()}>
+            {Locale.Logout}
+          </button>
+          <Link href={"https://t.me/Djipiti"}>
+            <Image src={tg} alt={'Telegram'}/>
+          </Link>
+
+        </div>
       </div>
     </ErrorBoundary>
   );

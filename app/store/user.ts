@@ -63,6 +63,7 @@ export const errorCatch = (error: any): string => {
 interface IUserStore {
   Login: (data: TelegramAuthData) => Promise<TelegramAuthData>;
   CheckAuth: () => Promise<IAuthResponse | undefined>;
+  Logout: () => void
 }
 export const userStore = create<IUserStore>((set) => ({
   Login: async (data: TelegramAuthData): Promise<any> => {
@@ -76,6 +77,10 @@ export const userStore = create<IUserStore>((set) => ({
     } catch (e: any) {
       set(e);
     }
+  },
+  Logout:async () => {
+    removeTokensStorage();
+    localStorage.removeItem("user");
   },
   CheckAuth: async () => {
     try {

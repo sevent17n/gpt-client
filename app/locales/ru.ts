@@ -9,7 +9,7 @@ const ru: any = {
   ChatItem: {
     ChatItemCount: (count: number) => `${count} сообщений`,
   },
-  Oferta: "Условия оферты",
+  Oferta: "Публичная оферта",
   Auth: {
     Warning: "Для начала авторизуйтесь!",
   },
@@ -51,6 +51,7 @@ const ru: any = {
       SaveAs: "Сохранить как маску",
     },
   },
+  Assistant:"Твой личный помощник",
   Export: {
     Title: "Все сообщения",
     Copy: "Копировать все",
@@ -76,7 +77,20 @@ const ru: any = {
   Settings: {
     Title: "Настройки",
     SubTitle: "Все настройки",
-
+    Danger: {
+      Reset: {
+        Title: "Сбросить все настройки",
+        SubTitle: "Сброс настроек до заводских",
+        Action: "Сброс настроек",
+        Confirm: "ВЫ уверены, что хотите сбросить настройки?",
+      },
+      Clear: {
+        Title: "Очистка всех данных",
+        SubTitle: "Очистка всех чатов и настроек",
+        Action: "Очистка",
+        Confirm: "Вы уверены, что хотите очистить все?",
+      },
+    },
     Lang: {
       Name: "Language", // ATTENTION: if you wanna add a new translation, please do not translate this value, leave it as `Language`
       All: "Все языки",
@@ -145,6 +159,10 @@ const ru: any = {
       SubTitle: "Используйте свой ключ, чтобы игнорировать лимит доступа",
       Placeholder: "API ключ OpenAI",
     },
+    CustomModel: {
+      Title: "Кастомные модели",
+      SubTitle: "Добавьте кастомные модели, разделяя их через запятую",
+    },
     Usage: {
       Title: "Баланс аккаунта",
       SubTitle(used: any, total: any) {
@@ -163,6 +181,10 @@ const ru: any = {
     Temperature: {
       Title: "Температура",
       SubTitle: "Чем выше значение, тем более случайный вывод",
+    },
+    TopP: {
+      Title: "Top P",
+      SubTitle: "Не меняйте значение вместе с температурой",
     },
     MaxTokens: {
       Title: "Максимальное количество токенов",
@@ -206,6 +228,7 @@ const ru: any = {
   Plugin: {
     Name: "Плагин",
   },
+  Logout:"Выйти из аккаунта",
   Mask: {
     Name: "Маска",
     Page: {

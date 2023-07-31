@@ -621,7 +621,6 @@ export function Chat() {
   const [isPaymentOpened, setIsPaymentOpened] = useState(false);
   const [isNeedAuth, setNeedAuth] = useState(false);
   const { CheckAuth, Login } = useStore(userStore);
-  console.log(localStorage.getItem("user"));
   const doSubmit = async (userInput: string) => {
     const accessToken = Cookies.get("access-token");
     accessToken && (await CheckAuth());
@@ -1166,7 +1165,7 @@ export function Chat() {
               {Locale.Payment.PTwo}
             </p>
             <form onSubmit={handleSubmit(handlePay)}>
-              <h4>{Locale.Payment.Email}*</h4>
+              <h4>{Locale.Payment.Email}<span style={{color:"red"}}>*</span></h4>
               <input  {...register("email", { required: true, pattern: /^\S+@\S+$/i })} type="text" placeholder={"Email"}/>
               {errors.email && errors.email.type === "required" && (
                   <p className="error-message">{Locale.Payment.Email_required}</p>
@@ -1187,13 +1186,6 @@ export function Chat() {
               <Link href={"/oferta"}>
                 {Locale.Payment.Oferta}
               </Link>
-            </p>
-            <p>
-              <Link href={"/oferta"}>
-                {Locale.Payment.Info}
-              </Link>
-
-
             </p>
           </div>
         )}

@@ -8,6 +8,8 @@ const en = {
     Unauthorized:
       "Unauthorized access, please enter access code in [auth](/#/auth) page.",
   },
+  Assistant:"Your own AI assistant.",
+  Logout:"Logout",
   Payment: {
     Buy: "Buy",
     Email_invalid:"Invalid email",
@@ -20,7 +22,7 @@ const en = {
     Oferta: "the terms of the offer",
     Info: "Legal information",
   },
-  Oferta: "The terms of the offer",
+  Oferta: "Public offer",
   Auth: {
     Warning: "To start you have to authorize!",
   },
