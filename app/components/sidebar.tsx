@@ -34,6 +34,7 @@ const ChatList = dynamic(async () => (await import("./chat-list")).ChatList, {
   loading: () => null,
 });
 
+
 function useHotKey() {
   const chatStore = useChatStore();
 
@@ -118,7 +119,7 @@ export function SideBar(props: { className?: string }) {
     >
       <div className={styles["sidebar-header"]} data-tauri-drag-region>
         <div className={styles["sidebar-title"]} data-tauri-drag-region>
-          Djipiti Russia
+          Djipiti
         </div>
         <div className={styles["sidebar-sub-title"]}>
           {Locale.Assistant}

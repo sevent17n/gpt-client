@@ -7,7 +7,7 @@ import AddIcon from "../icons/add.svg";
 import CloseIcon from "../icons/close.svg";
 import CopyIcon from "../icons/copy.svg";
 import ClearIcon from "../icons/clear.svg";
-import tg from "./tg.png"
+import tg from "./tg.jpg"
 import EditIcon from "../icons/edit.svg";
 import EyeIcon from "../icons/eye.svg";
 import {
@@ -205,7 +205,8 @@ function UserPromptModal(props: { onClose?: () => void }) {
 function DangerItems() {
   const chatStore = useChatStore();
   const appConfig = useAppConfig();
-
+  const { Logout } = useStore(userStore)
+  const  user = localStorage.getItem("user");
   return (
     <List>
       <ListItem
@@ -236,6 +237,15 @@ function DangerItems() {
           type="danger"
         />
       </ListItem>
+      {user ? <ListItem
+          title={Locale.Logout}
+      >
+        <IconButton
+            text={Locale.Logout}
+            onClick={() => Logout()}
+            type="danger"
+        />
+      </ListItem> : <></>}
     </List>
   );
 }
@@ -314,7 +324,7 @@ export function Settings() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const { Logout } = useStore(userStore)
+
   return (
     <ErrorBoundary>
       <div className="window-header" data-tauri-drag-region>
@@ -520,9 +530,7 @@ export function Settings() {
           <p>
             <Link href={"/oferta"}>{Locale.Oferta}</Link>
           </p>
-          <button onClick={() => Logout()}>
-            {Locale.Logout}
-          </button>
+
           <Link href={"https://t.me/Djipiti"}>
             <Image src={tg} alt={'Telegram'}/>
           </Link>

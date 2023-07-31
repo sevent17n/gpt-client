@@ -1,3 +1,9 @@
+@font-face {
+  font-family: 'moonbase';
+  src: url('/moonbase/moonbasealpha.otf');
+  font-weight: normal;
+  font-style: normal;
+}
 @mixin container {
   background-color: var(--white);
   border: var(--border-in-light);
@@ -136,9 +142,10 @@
 }
 
 .sidebar-title {
-  font-size: 20px;
+  font-size: 48px;
   font-weight: bold;
   animation: slide-in ease 0.3s;
+  font-family: "moonbase";
 }
 
 .sidebar-sub-title {

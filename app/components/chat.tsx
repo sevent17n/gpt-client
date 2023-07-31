@@ -922,7 +922,6 @@ export function Chat() {
       const unparsedUser = localStorage.getItem("user");
       if (unparsedUser) {
         const user = JSON.parse(unparsedUser);
-        console.log(user);
         const response = await axios.post(
             `https://djipiti.chat/api_server/payment`,{
               ...user,
