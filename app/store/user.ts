@@ -88,7 +88,7 @@ export const userStore = create<IUserStore>((set) => ({
       const response = await axios.post<IAuthResponse>(
         `https://djipiti.chat/api_server/auth/login/access-token`,
         {
-          refreshToken,
+          refreshToken:refreshToken,
         },
         {
           headers: {

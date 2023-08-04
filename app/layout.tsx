@@ -32,7 +32,7 @@ export const metadata = {
     { media: "(prefers-color-scheme: dark)", color: "#151515" },
   ],
   appleWebApp: {
-    title: "ChatGPT на русском языке в России и СНГ | Djipiti | Джипити",
+    title: "Джипити",
     statusBarStyle: "default",
   },
 };
@@ -47,8 +47,35 @@ export default function RootLayout({
       <head>
         <meta name="config" content={JSON.stringify(getClientConfig())} />
         <link rel="manifest" href="/site.webmanifest"></link>
+        <link
+          rel={"apple-touch-icon"}
+          href={"/apple-touch-icon.png"}
+          sizes={"180x180"}
+        />
+        <link
+          rel={"icon"}
+          type={"image/x-icon"}
+          href={"/favicon.ico"}
+          sizes={"16x16"}
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="/favicon-16x16.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="/favicon-32x32.png"
+        />
+
         <Script src="/serviceWorkerRegister.js" defer></Script>
-        <Script
+       
+      </head>
+      <body>
+ <Script
           async
           src="https://www.googletagmanager.com/gtag/js?id=G-NSWE0W06R3"
         />
@@ -91,8 +118,7 @@ export default function RootLayout({
             />
           </div>
         </noscript>
-      </head>
-      <body>{children}</body>
+{children}</body>
     </html>
   );
 }

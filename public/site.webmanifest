@@ -1,22 +1,41 @@
 {
-    "name": "Джипити",
-    "short_name": "Djipiti",
-    "description": "Djipiti - это улучшенная версия ChatGPT с невероятными возможностями кастомизации и персонализации! Теперь вы можете полностью настроить свой опыт общения с искусственным интеллектом. Выбирайте стиль диалога, настраивайте предпочтения и уровень формальности, чтобы Джипити стал вашим идеальным собеседником.",
-    "icons": [
-      {
-        "src": "/android-chrome-192x192.png",
-        "sizes": "192x192",
-        "type": "image/png"
-      },
-      {
-        "src": "/android-chrome-512x512.png",
-        "sizes": "512x512",
-        "type": "image/png"
-      }
-    ],
-    "start_url": "/",
-    "theme_color": "#ffffff",
-    "background_color": "#ffffff",
-    "display": "standalone"
+  "name": "ChatGPT на русском языке в России и СНГ | Djipiti | Джипити",
+  "short_name": "Джипити",
+  "description": "Джипити - это улучшенная версия ChatGPT с невероятными возможностями кастомизации и персонализации! Теперь вы можете полностью настроить свой опыт общения с искусственным интеллектом. Выбирайте стиль диалога, настраивайте предпочтения и уровень формальности, чтобы Джипити стал вашим идеальным собеседником.",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/favicon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/",
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
+  "display": "standalone"
 }
-  
