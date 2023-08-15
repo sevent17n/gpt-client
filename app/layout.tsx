@@ -72,95 +72,45 @@ export default function RootLayout({
         />
 
         <Script src="/serviceWorkerRegister.js" defer></Script>
-       <Script
-          async
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+                (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+                m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+                (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+      
+                ym(94543374, "init", {
+                      clickmap:true,
+                      trackLinks:true,
+                      accurateTrackBounce:true
+                });
+              `,
+          }}
+        />
+        <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-NSWE0W06R3"
+          strategy="afterInteractive"
         />
-        <Script
-          id={"google"}
-          dangerouslySetInnerHTML={{
-            __html: `
-                 (window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-NSWE0W06R3');
-              `,
-          }}
-        />
-        <Script
-          id={"yandex"}
-          dangerouslySetInnerHTML={{
-            __html: `
-                 (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a[]).push(arguments)};
-   m[i].l=1*new Date();
-   for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-   k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-   (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){window.dataLayer.push(arguments);}
+          gtag('js', new Date());
 
-   ym(994543374, "init", {
-        clickmap:true,
-        trackLinks:true,
-        accurateTrackBounce:true,
-        webvisor:true
-   });
-              `,
-          }}
-        />
+          gtag('config', 'G-NSWE0W06R3');
+        `}
+        </Script>
         <noscript>
           <div>
             <img
-              src="https://mc.yandex.ru/watch/994543374"
+              src="https://mc.yandex.ru/watch/94543374"
               style={{ position: "absolute", left: "-9999px" }}
               alt=""
             />
           </div>
         </noscript>
       </head>
-      <body>
- <Script
-          async
-          src="https://www.googletagmanager.com/gtag/js?id=G-NSWE0W06R3"
-        />
-        <Script
-          id={"google"}
-          dangerouslySetInnerHTML={{
-            __html: `
-                 (window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-NSWE0W06R3');
-              `,
-          }}
-        />
-        <Script
-          id={"yandex"}
-          dangerouslySetInnerHTML={{
-            __html: `
-                 (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a[]).push(arguments)};
-   m[i].l=1*new Date();
-   for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-   k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-   (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
-
-   ym(994543374, "init", {
-        clickmap:true,
-        trackLinks:true,
-        accurateTrackBounce:true,
-        webvisor:true
-   });
-              `,
-          }}
-        />
-        <noscript>
-          <div>
-            <img
-              src="https://mc.yandex.ru/watch/994543374"
-              style={{ position: "absolute", left: "-9999px" }}
-              alt=""
-            />
-          </div>
-        </noscript>
-{children}</body>
+      <body>{children}</body>
     </html>
   );
 }
